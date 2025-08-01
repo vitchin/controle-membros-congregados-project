@@ -6,11 +6,11 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 
-const inputstyle = "mb-6 w-full h-fit grid grid-cols-4 gap-4 items-center justify-center";
+const inputstyle = "mb-6 w-full grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-start";
 
 export function Register() {
   return (
-    <section className="lg:w-400 md:w-300 sm:w-100 container mx-auto my-10 px-5 py-8 bg-white rounded-lg shadow-md">
+    <section className="container max-w-screen-lg mx-auto my-10 px-5 py-8 bg-white rounded-lg shadow-md">
       <h2 className="text-center text-2xl font-bold mb-4">REGISTRAR</h2>
       <p className="mb-4 text-center text-gray-500">Informe seus dados pessoais, familiares e ministeriais para completar o registro.</p>
       <form>
