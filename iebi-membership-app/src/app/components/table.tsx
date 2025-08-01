@@ -184,7 +184,7 @@ export function TabelaPessoas() {
           className="max-w-sm"
         />
 
-        <Button>
+        <Button id="btn-report">
           GERAR RELATÓRIO EXCEL
         </Button>
 
