@@ -5,10 +5,10 @@ import { Footer } from "../components/footer";
 
 export default function RegisterPage() {
   return (
-    <section className="relative bg-gray-50 min-h-screen flex flex-col items-center align justify-center">
+    <main>
       <Title />
       <Register />
       <Footer />
-    </section>
+    </main>
   )
 }

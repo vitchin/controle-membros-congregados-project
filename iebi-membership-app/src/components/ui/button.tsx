@@ -10,19 +10,19 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+          "bg-[#9d3726] text-white shadow-xs hover:bg-[#b0432f]",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-[#b0432f] text-white shadow-xs hover:bg-[#7a2416] focus-visible:ring-[#b0432f]/20 dark:focus-visible:ring-[#b0432f]/40 dark:bg-[#7a2416]/80",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border border-[#9d3726] bg-white text-[#9d3726] shadow-xs hover:bg-[#f5e6e2] hover:text-[#b0432f] dark:bg-[#2d1813] dark:border-[#9d3726] dark:hover:bg-[#3d1f17]",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+          "bg-[#f5e6e2] text-[#9d3726] shadow-xs hover:bg-[#e2c2b8]",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "hover:bg-[#f5e6e2] hover:text-[#9d3726] dark:hover:bg-[#3d1f17]",
+        link: "text-[#9d3726] underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-10 px-4 py-2 has-[>svg]:px-3",
+        default: "h-12 px-4 py-2 has-[>svg]:px-3",
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-9",

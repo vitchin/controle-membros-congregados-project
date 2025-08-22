@@ -1,13 +1,26 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Footer } from "../components/footer";
 import { TabelaPessoas } from "../components/table";
 import { Title } from "../components/titulo";
 
 export default function Table() {
+    const router = useRouter();
+
+    useEffect(() => {
+        const loggedIn = localStorage.getItem("isLoggedIn");
+        if (!loggedIn) {
+        router.push("/login");
+        }
+    }, [router]);
+
     return (
-        <section className="relative bg-gray-50 min-h-screen flex flex-col items-center align justify-center">
+        <main className="container">
             <Title />
             <TabelaPessoas />
             <Footer />
-        </section>
+        </main>
     )
 }
