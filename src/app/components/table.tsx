@@ -272,7 +272,7 @@ export function TabelaPessoas() {
           }
           className="w-full max-w-[600px]"
         />
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Button
             id="btn-add"
             onClick={() => router.push("/register")}

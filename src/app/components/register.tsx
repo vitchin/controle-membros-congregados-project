@@ -7,7 +7,7 @@ import { FormInput } from "./componentInput";
 import { FormSelect } from "./componentSelect";
 import { FormCheckbox } from "./componentCheckbox";
 
-const inputstyle = "mb-6 w-full grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
+const inputstyle = "mb-6 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4";
 
 const initialFormData = {
   nome: "", sexo: "", dtNascimento: "", estadoCivil: "", numTel: "", email: "", cep: "",
@@ -209,7 +209,7 @@ export function Register() {
           ]} />
         </div>
 
-        <div className="flex justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
           {isLoggedIn && (
             <Button id="btn-back" variant="outline" onClick={() => router.push('/table')}>
               VOLTAR PARA A TABELA

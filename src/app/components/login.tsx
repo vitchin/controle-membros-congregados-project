@@ -30,7 +30,7 @@ export function Login() {
   }
 
   return (
-    <main className="text-[#350700] lg:w-100 md:w-100 sm:w-2xs container mx-auto my-10 px-5 py-8 bg-white border-1 border-solid border-gray-300 rounded-lg shadow-md">
+    <main className="text-[#350700] container max-w-md mx-auto my-10 px-5 py-8 bg-white border-1 border-solid border-gray-300 rounded-lg shadow-md">
       <h2 className="text-center text-2xl font-bold mb-2">LOGIN</h2>
       <p className="mb-4 text-center text-gray-500">Informe seus dados de login para acessar.</p>
       <form className="w-full flex flex-col gap-6" onSubmit={handleLogin}>
