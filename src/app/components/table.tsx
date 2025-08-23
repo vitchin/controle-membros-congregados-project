@@ -132,40 +132,26 @@ export function TabelaPessoas() {
   const [reportColumns, setReportColumns] = React.useState<{[key: string]: boolean}>({});
   const [reportFilename, setReportFilename] = React.useState("relatorio_membros");
 
-  React.useEffect(() => {
-    const storedPeople = localStorage.getItem("people");
-    if (storedPeople) {
-      setPeople(JSON.parse(storedPeople));
-    } else {
-      localStorage.setItem("people", JSON.stringify(initialData));
-      setPeople(initialData);
-    }
-    const initialColumns = columns
-      .filter(c => c.accessorKey)
-      .reduce((acc, col) => ({ ...acc, [col.accessorKey as string]: true }), {});
-    setReportColumns(initialColumns);
-  }, []);
-
   const updatePeopleData = (newPeople: Pessoa[]) => {
     setPeople(newPeople);
     localStorage.setItem("people", JSON.stringify(newPeople));
   };
 
-  const handleDelete = () => {
+  const handleDelete = React.useCallback(() => {
     if (personToDelete) {
       const newPeople = people.filter((p) => p.nome !== personToDelete.nome); // Assuming 'nome' is unique
       updatePeopleData(newPeople);
       setIsDeleteDialogOpen(false);
       setPersonToDelete(null);
     }
-  };
+  }, [people, personToDelete]);
 
-  const handleEdit = (person: Pessoa) => {
+  const handleEdit = React.useCallback((person: Pessoa) => {
     localStorage.setItem("personToEdit", JSON.stringify(person));
     router.push("/register");
-  };
+  }, [router]);
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = React.useCallback(() => {
     const selectedColumns = Object.keys(reportColumns).filter(col => reportColumns[col]);
     const filteredData = people.map(person => {
       const newPerson: {[key: string]: any} = {};
@@ -177,9 +163,9 @@ export function TabelaPessoas() {
 
     exportTableToExcel(filteredData, reportFilename);
     setIsReportModalOpen(false);
-  }
+  }, [people, reportColumns, reportFilename]);
 
-  const columns: ColumnDef<Pessoa>[] = [
+  const columns: ColumnDef<Pessoa>[] = React.useMemo(() => [
     { accessorKey: "nome", header: "Nome" }, { accessorKey: "sexo", header: "Sexo" },
     { accessorKey: "dtNascimento", header: "Nascimento" }, { accessorKey: "estadoCivil", header: "Estado Civil" },
     { accessorKey: "numTel", header: "Telefone" }, { accessorKey: "email", header: "Email" },
@@ -225,7 +211,24 @@ export function TabelaPessoas() {
         </DropdownMenu>
       ),
     },
-  ];
+  ], [handleEdit]);
+
+  React.useEffect(() => {
+    const storedPeople = localStorage.getItem("people");
+    if (storedPeople) {
+      setPeople(JSON.parse(storedPeople));
+    } else {
+      localStorage.setItem("people", JSON.stringify(initialData));
+      setPeople(initialData);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    const initialColumns = columns
+      .filter(c => c.accessorKey)
+      .reduce((acc, col) => ({ ...acc, [col.accessorKey as string]: true }), {});
+    setReportColumns(initialColumns);
+  }, [columns]);
 
   const table = useReactTable({
     data: people,
