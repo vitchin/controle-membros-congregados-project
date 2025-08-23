@@ -17,13 +17,14 @@ interface FormInputProps {
     name?: string;
     value?: string;
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
-export function FormInput({ id, name, label, placeholder, maxLength, type = "text", required = false, disabled = false, value, onChange }: FormInputProps) {
+export function FormInput({ id, name, label, placeholder, maxLength, type = "text", required = false, disabled = false, value, onChange, onBlur }: FormInputProps) {
   return (
     <div className={divinputstyle}>
       <Label>{label}{required && obrigatorio}</Label>
-      <Input id={id} name={name} placeholder={placeholder} type={type} maxLength={maxLength} required={required} disabled={disabled} value={value} onChange={onChange} />
+      <Input id={id} name={name} placeholder={placeholder} type={type} maxLength={maxLength} required={required} disabled={disabled} value={value} onChange={onChange} onBlur={onBlur} />
     </div>
   )
 }

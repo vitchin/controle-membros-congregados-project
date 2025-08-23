@@ -26,6 +26,7 @@ export function Register() {
   const [formData, setFormData] = useState(initialFormData);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cepError, setCepError] = useState("");
 
   useEffect(() => {
     const loggedInStatus = localStorage.getItem("isLoggedIn");
@@ -55,6 +56,37 @@ export function Register() {
 
   const handleCheckboxChange = (id: FormDataKey, checked: boolean) => {
     setFormData((prev) => ({ ...prev, [id]: checked }));
+  };
+
+  const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    const cep = e.target.value.replace(/\D/g, ""); // Remove non-digits
+
+    if (cep.length !== 8) {
+      setCepError("CEP inválido. Deve conter 8 dígitos.");
+      return;
+    }
+
+    setCepError(""); // Clear previous errors
+
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+
+      if (data.erro) {
+        setCepError("CEP não encontrado.");
+      } else {
+        setFormData(prev => ({
+          ...prev,
+          endereco: data.logradouro,
+          bairro: data.bairro,
+          cidade: data.localidade,
+          uf: data.uf,
+        }));
+      }
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error);
+      setCepError("Erro ao buscar CEP. Verifique sua conexão.");
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -122,7 +154,10 @@ export function Register() {
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">ENDEREÇO</h4>
         <div className={inputstyle}>
-          <FormInput id="cep" label="CEP:" placeholder="xxxxx-xxx" type="text" required value={formData.cep} onChange={handleInputChange} />
+          <div>
+            <FormInput id="cep" label="CEP:" placeholder="xxxxx-xxx" type="text" required value={formData.cep} onChange={handleInputChange} onBlur={handleCepBlur} />
+            {cepError && <p className="text-red-500 text-xs mt-1">{cepError}</p>}
+          </div>
           <FormInput id="endereco" label="Endereço:" placeholder="Endereço" type="text" required value={formData.endereco} onChange={handleInputChange} />
           <FormInput id="complemento" label="Complemento:" placeholder="Complemento" type="text" value={formData.complemento} onChange={handleInputChange} />
           <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" required value={formData.bairro} onChange={handleInputChange} />
