@@ -25,6 +25,7 @@ export function Register() {
   const router = useRouter();
   const [formData, setFormData] = useState(initialFormData);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [originalName, setOriginalName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cepError, setCepError] = useState("");
 
@@ -37,6 +38,7 @@ export function Register() {
       try {
         const personToEdit = JSON.parse(personToEditData);
         setFormData({ ...initialFormData, ...personToEdit });
+        setOriginalName(personToEdit.nome);
         setIsEditMode(true);
         localStorage.removeItem("personToEdit");
       } catch (error) {
@@ -96,7 +98,7 @@ export function Register() {
 
     if (isEditMode) {
       people = people.map((p: any) =>
-        p.nome === formData.nome ? formData : p
+        p.nome === originalName ? formData : p
       );
     } else {
       people.push(formData);
@@ -135,7 +137,7 @@ export function Register() {
       <form className="w-full" onSubmit={handleSubmit}>
         <h3 className="mb-5 font-bold">DADOS PESSOAIS</h3>
         <div className={inputstyle}>
-          <FormInput id="nome" label="Nome:" placeholder="Nome completo" required value={formData.nome} onChange={handleInputChange} />
+          <FormInput id="nome" label="Nome:" placeholder="Nome completo" required value={formData.nome} onChange={handleInputChange} disabled={isEditMode} />
           <FormInput id="apelido" label="Nome social:" placeholder="Nome social" type="text" value={formData.apelido} onChange={handleInputChange} />
           <FormSelect id="sexo" label="Sexo:" placeholder="Sexo" required value={formData.sexo} onChange={(value) => handleSelectChange('sexo', value)} options={[
             { label: "Masculino", value: "Masculino" }, { label: "Feminino", value: "Feminino" }
