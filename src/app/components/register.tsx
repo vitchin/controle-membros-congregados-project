@@ -9,21 +9,37 @@ import { FormCheckbox } from "./componentCheckbox";
 
 const inputstyle = "mb-6 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4";
 
-const initialFormData = {
+type FormData = {
+  nome: string; sexo: string; dtNascimento: string; estadoCivil: string; numTel: string; email: string; cep: string;
+  endereco: string; cidade: string; bairro: string; uf: string; natural: string; apelido: string; escola: string;
+  empresaTel: string; empresaLocal: string; conjuge: string; conjugeTel: string; dtCasamento: string;
+  pai: string; mae: string; numFilhos: number | ""; ministerio: string; ministerioFunc: string;
+  gfcdLider: boolean; dtBatismo: string; batizado: boolean; igrejaBatizado: string;
+  dtAdmissao: string; tipoAdmissao: string; dtConversao: string; gfcdFrequentado: string;
+  gfcdConsolidado: boolean; nomeConsolidador: string; retiro: string; profissao: string; complemento: string;
+};
+
+const initialFormData: FormData = {
   nome: "", sexo: "", dtNascimento: "", estadoCivil: "", numTel: "", email: "", cep: "",
   endereco: "", cidade: "", bairro: "", uf: "", natural: "", apelido: "", escola: "",
   empresaTel: "", empresaLocal: "", conjuge: "", conjugeTel: "", dtCasamento: "",
-  pai: "", mae: "", numFilhos: 0, ministerio: "", ministerioFunc: "",
+  pai: "", mae: "", numFilhos: "", ministerio: "", ministerioFunc: "",
   gfcdLider: false, dtBatismo: "", batizado: false, igrejaBatizado: "",
   dtAdmissao: "", tipoAdmissao: "", dtConversao: "", gfcdFrequentado: "",
   gfcdConsolidado: false, nomeConsolidador: "", retiro: "", profissao: "", complemento: ""
 };
 
-type FormDataKey = keyof typeof initialFormData;
+type ViaCepResponse = {
+  logradouro: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  erro?: boolean;
+};
 
 export function Register() {
   const router = useRouter();
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState<FormData>(initialFormData);
   const [isEditMode, setIsEditMode] = useState(false);
   const [originalName, setOriginalName] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,9 +52,9 @@ export function Register() {
     const personToEditData = localStorage.getItem("personToEdit");
     if (personToEditData) {
       try {
-        const personToEdit = JSON.parse(personToEditData);
+        const personToEdit: Partial<FormData> = JSON.parse(personToEditData);
         setFormData({ ...initialFormData, ...personToEdit });
-        setOriginalName(personToEdit.nome);
+        setOriginalName(personToEdit.nome || "");
         setIsEditMode(true);
         localStorage.removeItem("personToEdit");
       } catch (error) {
@@ -48,31 +64,31 @@ export function Register() {
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value, type } = e.target;
+    const { id, value, type } = e.target as HTMLInputElement & { id: keyof FormData };
     setFormData((prev) => ({ ...prev, [id]: type === 'number' ? (value === '' ? '' : Number(value)) : value }));
   };
 
-  const handleSelectChange = (id: FormDataKey, value: string) => {
+  const handleSelectChange = (id: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  const handleCheckboxChange = (id: FormDataKey, checked: boolean) => {
+  const handleCheckboxChange = (id: keyof FormData, checked: boolean) => {
     setFormData((prev) => ({ ...prev, [id]: checked }));
   };
 
   const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-    const cep = e.target.value.replace(/\D/g, ""); // Remove non-digits
+    const cep = e.target.value.replace(/\D/g, "");
 
     if (cep.length !== 8) {
       setCepError("CEP inválido. Deve conter 8 dígitos.");
       return;
     }
 
-    setCepError(""); // Clear previous errors
+    setCepError("");
 
     try {
       const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-      const data = await response.json();
+      const data: ViaCepResponse = await response.json();
 
       if (data.erro) {
         setCepError("CEP não encontrado.");
@@ -94,10 +110,10 @@ export function Register() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const storedPeople = localStorage.getItem("people");
-    let people = storedPeople ? JSON.parse(storedPeople) : [];
+    let people: FormData[] = storedPeople ? JSON.parse(storedPeople) : [];
 
     if (isEditMode) {
-      people = people.map((p: any) =>
+      people = people.map((p) =>
         p.nome === originalName ? formData : p
       );
     } else {
