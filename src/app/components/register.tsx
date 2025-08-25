@@ -16,7 +16,7 @@ const initialFormData = {
   pai: "", mae: "", numFilhos: 0, ministerio: "", ministerioFunc: "",
   gfcdLider: false, dtBatismo: "", batizado: false, igrejaBatizado: "",
   dtAdmissao: "", tipoAdmissao: "", dtConversao: "", gfcdFrequentado: "",
-  gfcdConsolidado: false, nomeConsolidador: "", retiro: "", profissao: "", complemento: ""
+  gfcdConsolidado: false, nomeConsolidador: "", retiro: "", profissao: ""
 };
 
 type FormDataKey = keyof typeof initialFormData;
@@ -155,13 +155,12 @@ export function Register() {
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">ENDEREÇO</h4>
         <div className={inputstyle}>
           <div>
-            <FormInput id="cep" label="CEP:" placeholder="xxxxx-xxx" type="text" required value={formData.cep} onChange={handleInputChange} onBlur={handleCepBlur} />
+            <FormInput id="cep" label="CEP:" placeholder="xxxxx-xxx" type="text" value={formData.cep} onChange={handleInputChange} onBlur={handleCepBlur} />
             {cepError && <p className="text-red-500 text-xs mt-1">{cepError}</p>}
           </div>
           <FormInput id="endereco" label="Endereço:" placeholder="Endereço" type="text" required value={formData.endereco} onChange={handleInputChange} />
-          <FormInput id="complemento" label="Complemento:" placeholder="Complemento" type="text" value={formData.complemento} onChange={handleInputChange} />
-          <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" required value={formData.bairro} onChange={handleInputChange} />
-          <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" required value={formData.cidade} onChange={handleInputChange} />
+          <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" value={formData.bairro} onChange={handleInputChange} />
+          <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" value={formData.cidade} onChange={handleInputChange} />
           <FormSelect id="uf" placeholder="UF" label="UF:" value={formData.uf} onChange={(value) => handleSelectChange('uf', value)} options={estadosBrasil}/>
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">TRABALHO</h4>
@@ -215,7 +214,7 @@ export function Register() {
               VOLTAR PARA A TABELA
             </Button>
           )}
-          <Button id="btn-register" className="w-full" type="submit">
+          <Button id="btn-register" className="lg:max-w-[300px] md:max-w-[200px] sm:w-full" type="submit">
             {isEditMode ? "CONFIRMAR" : "REGISTRAR"}
           </Button>
         </div>
