@@ -369,20 +369,23 @@ export function TabelaPessoas() {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4 max-h-60 overflow-y-auto">
-              {Object.keys(reportColumns).map((col) => (
-                <div key={col} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={col}
-                    checked={reportColumns[col]}
-                    onCheckedChange={(checked) =>
-                      setReportColumns(prev => ({ ...prev, [col]: !!checked }))
-                    }
-                  />
-                  <Label htmlFor={col} className="capitalize">
-                    {col}
-                  </Label>
-                </div>
-              ))}
+              {columns.filter(c => c.accessorKey).map((column) => {
+                const accessorKey = column.accessorKey as string;
+                return (
+                  <div key={accessorKey} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={accessorKey}
+                      checked={reportColumns[accessorKey]}
+                      onCheckedChange={(checked) =>
+                        setReportColumns(prev => ({ ...prev, [accessorKey]: !!checked }))
+                      }
+                    />
+                    <Label htmlFor={accessorKey} className="capitalize">
+                      {String(column.header)}
+                    </Label>
+                  </div>
+                );
+              })}
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="filename" className="text-right">
