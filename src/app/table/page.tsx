@@ -10,6 +10,7 @@ export default function Table() {
     const router = useRouter();
 
     useEffect(() => {
+        document.title = "IEBI Membresia | Tabela de usuários";
         const loggedIn = localStorage.getItem("isLoggedIn");
         if (!loggedIn) {
         router.push("/login");
