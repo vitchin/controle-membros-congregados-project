@@ -10,11 +10,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[#9d3726] text-white shadow-xs hover:bg-[#b0432f]",
+          "bg-[#9d3726] text-white shadow-xs hover:bg-[#b0432f] active:scale-[0.98] active:brightness-90 transition-transform",
         destructive:
-          "bg-[#b0432f] text-white shadow-xs hover:bg-[#7a2416] focus-visible:ring-[#b0432f]/20 dark:focus-visible:ring-[#b0432f]/40 dark:bg-[#7a2416]/80",
+          "bg-[#b0432f] text-white shadow-xs hover:bg-[#7a2416] focus-visible:ring-[#b0432f]/20 dark:focus-visible:ring-[#b0432f]/40 dark:bg-[#7a2416]/80 active:scale-[0.98] active:brightness-90 transition-transform",
         outline:
-          "border border-[#9d3726] bg-white text-[#9d3726] shadow-xs hover:bg-[#f5e6e2] hover:text-[#b0432f] dark:bg-[#2d1813] dark:border-[#9d3726] dark:hover:bg-[#3d1f17]",
+          "border border-[#9d3726] bg-white text-[#9d3726] shadow-xs hover:bg-[#f5e6e2] hover:text-[#b0432f] dark:bg-[#2d1813] dark:border-[#9d3726] dark:hover:bg-[#3d1f17] active:scale-[0.98] active:bg-accent transition-transform",
         secondary:
           "bg-[#f5e6e2] text-[#9d3726] shadow-xs hover:bg-[#e2c2b8]",
         ghost:

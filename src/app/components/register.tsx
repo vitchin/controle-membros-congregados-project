@@ -47,6 +47,7 @@ export function Register() {
   const [personId, setPersonId] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cepError, setCepError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const loggedInStatus = localStorage.getItem("isLoggedIn");
@@ -115,15 +116,18 @@ export function Register() {
 
   const submeterFormulario = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSuccessMessage("");
     try {
       if (isEditMode && personId) {
         const personRef = ref(database, 'membros/' + personId);
         await update(personRef, formData);
+        setSuccessMessage("Registro atualizado com sucesso!");
       } else {
         const newPersonRef = push(ref(database, 'membros'));
         await set(newPersonRef, formData);
+        setSuccessMessage("Registro concluído com sucesso!");
+        setFormData(initialFormData); // Clear form only on new registration
       }
-      router.push("/table");
     } catch (error) {
       console.error("Erro ao salvar dados no Firebase:", error);
     }
@@ -197,7 +201,7 @@ export function Register() {
         <div className={inputstyle}>
           <FormInput id="pai" label="Nome do Pai:" placeholder="Nome do Pai" type="text" value={formData.pai} onChange={manipularMudancaInput}/>
           <FormInput id="mae" label="Nome da Mãe:" placeholder="Nome da Mãe" type="text" value={formData.mae} onChange={manipularMudancaInput} />
-          <FormInput id="numFilhos" label="Nº de Filhos:" placeholder="Nº de filhos" type="number" value={String(formData.numFilhos)} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'}/>
+          <FormInput id="numFilhos" label="Nº de Filhos:" placeholder="Nº de filhos" type="number" value={String(formData.numFilhos)} onChange={manipularMudancaInput}/>
           <FormInput id="conjuge" label="Nome do Cônjuge:" placeholder="Nome do Cônjuge" type="text" value={formData.conjuge} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'}/>
           <FormInput id="conjugeTel" label="Telefone do Cônjuge:" placeholder="(xx) xxxxx-xxxx" value={formData.conjugeTel} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'} />
           <FormInput id="dtCasamento" label="Data do Casamento:" placeholder="" type="date" value={formData.dtCasamento} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'} />
@@ -231,6 +235,12 @@ export function Register() {
             { label: "Pre-encontro", value: "Pre-encontro" }, { label: "Encontro", value: "Encontro"}, { label: "Pós-encontro", value: "Pós-encontro"}
           ]} />
         </div>
+
+        {successMessage && (
+          <div className="text-center text-green-600 font-semibold my-4 p-3 bg-green-100 rounded-md">
+            {successMessage}
+          </div>
+        )}
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           {isLoggedIn && (
