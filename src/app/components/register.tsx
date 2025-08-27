@@ -7,6 +7,8 @@ import { FormInput } from "./componentInput";
 import { FormSelect } from "./componentSelect";
 import { FormCheckbox } from "./componentCheckbox";
 
+import { database } from "../../../services/firebase";
+
 const inputstyle = "mb-6 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4";
 
 type FormData = {
@@ -140,6 +142,8 @@ export function Register() {
     { label: "São Paulo (SP)", value: "SP" }, { label: "Sergipe (SE)", value: "SE" },
     { label: "Tocantins (TO)", value: "TO" }
   ];
+
+  
 
   return (
     <section className="text-[#350700] container w-full h-full mx-auto my-10 px-5 py-8 bg-white border-1 border-solid border-gray-300 rounded-lg shadow-md">
