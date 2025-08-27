@@ -139,8 +139,8 @@ export function TabelaPessoas() {
     { accessorKey: "batizado", header: "Batizado?", cell: ({ row }) => (row.getValue("batizado") ? "Sim" : "Não") },
     { accessorKey: "igrejaBatizado", header: "Igreja Batismo" }, { accessorKey: "dtAdmissao", header: "Admissão" },
     { accessorKey: "tipoAdmissao", header: "Tipo Admissão" }, { accessorKey: "dtConversao", header: "Data Extra" },
-    { accessorKey: "gfcdFrequentado", header: "GFCD" }, { accessorKey: "gfcdConsolidado", header: "Consolidado por" },
-    { accessorKey: "nomeConsolidador", header: "Consolidador" }, { accessorKey: "retiro", header: "Retiro" },
+    { accessorKey: "gfcdFrequentado", header: "GFCD" }, { accessorKey: "gfcdConsolidado", header: "Consolidado?", cell: ({ row }) => (row.getValue("gfcdConsolidado") ? "Sim" : "Não") },
+    { accessorKey: "nomeConsolidador", header: "Consolidado por" }, { accessorKey: "retiro", header: "Retiro" },
     {
       id: "actions",
       header: "Ações",
