@@ -162,21 +162,21 @@ export function Register() {
       <form className="w-full" onSubmit={submeterFormulario}>
         <h3 className="mb-5 font-bold">DADOS PESSOAIS</h3>
         <div className={inputstyle}>
-          <FormInput id="nome" label="Nome:" placeholder="Nome completo" required value={formData.nome} onChange={manipularMudancaInput} disabled={isEditMode} />
-          <FormInput id="apelido" label="Nome social:" placeholder="Nome social" type="text" value={formData.apelido} onChange={manipularMudancaInput} />
+          <FormInput id="nome" label="Nome:" placeholder="Nome completo" required value={formData.nome} onChange={manipularMudancaInput} disabled={isEditMode} textOnly />
+          <FormInput id="apelido" label="Nome social:" placeholder="Nome social" type="text" value={formData.apelido} onChange={manipularMudancaInput} textOnly />
           <FormSelect id="sexo" label="Sexo:" placeholder="Sexo" required value={formData.sexo} onChange={(value) => manipularMudancaSelect('sexo', value)} options={[
             { label: "Masculino", value: "Masculino" }, { label: "Feminino", value: "Feminino" }
           ]} />
           <FormInput id="dtNascimento" label="Data de Nascimento:" placeholder="" type="date" required value={formData.dtNascimento} onChange={manipularMudancaInput} />
-          <FormInput id="natural" label="Naturalidade:" placeholder="Naturalidade" type="text" value={formData.natural} onChange={manipularMudancaInput} />
-          <FormInput id="profissao" label="Profissão:" placeholder="Profissão" type="text" value={formData.profissao} onChange={manipularMudancaInput} />
+          <FormInput id="natural" label="Naturalidade:" placeholder="Naturalidade" type="text" value={formData.natural} onChange={manipularMudancaInput} textOnly />
+          <FormInput id="profissao" label="Profissão:" placeholder="Profissão" type="text" value={formData.profissao} onChange={manipularMudancaInput} textOnly />
           <FormSelect id="escola" label="Escolaridade:" placeholder="Escolaridade" value={formData.escola} onChange={(value) => manipularMudancaSelect('escola', value)} options={[
             { label: "Fundamental", value: "Fundamental" }, { label: "Médio", value: "Médio" }, { label: "Superior", value: "Superior"}
           ]} />
           <FormSelect id="estadoCivil" label="Estado Civil:" placeholder="Estado Civil" required value={formData.estadoCivil} onChange={(value) => manipularMudancaSelect('estadoCivil', value)} options={[
             { label: "Solteiro", value: "Solteiro" }, { label: "Casado", value: "Casado" }, { label: "Divorciado", value: "Divorciado"}
           ]} />
-          <FormInput id="numTel" label="Telefone:" placeholder="(xx) xxxxx-xxxx" type="text" required value={formData.numTel} onChange={manipularMudancaInput} />
+          <FormInput id="numTel" label="Telefone:" placeholder="(xx) xxxxx-xxxx" type="text" required value={formData.numTel} onChange={manipularMudancaInput} mask="phone" />
           <FormInput id="email" label="Email:" placeholder="Email" type="email" required value={formData.email} onChange={manipularMudancaInput} />
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">ENDEREÇO</h4>
@@ -187,34 +187,34 @@ export function Register() {
           </div>
           <FormInput id="endereco" label="Endereço:" placeholder="Endereço" type="text" required value={formData.endereco} onChange={manipularMudancaInput} />
           <FormInput id="complemento" label="Complemento:" placeholder="Complemento" type="text" value={formData.complemento} onChange={manipularMudancaInput} />
-          <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" required value={formData.bairro} onChange={manipularMudancaInput} />
-          <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" required value={formData.cidade} onChange={manipularMudancaInput} />
+          <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" required value={formData.bairro} onChange={manipularMudancaInput} textOnly />
+          <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" required value={formData.cidade} onChange={manipularMudancaInput} textOnly />
           <FormSelect id="uf" placeholder="UF" label="UF:" value={formData.uf} onChange={(value) => manipularMudancaSelect('uf', value)} options={estadosBrasil}/>
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">TRABALHO</h4>
         <div className={inputstyle}>
-          <FormInput id="empresaLocal" label="Local de Trabalho:" placeholder="Local de Trabalho" type="text" value={formData.empresaLocal} onChange={manipularMudancaInput}/>
-          <FormInput id="empresaTel" label="Telefone da Empresa:" placeholder="(xx) xxxxx-xxxx" type="text" value={formData.empresaTel} onChange={manipularMudancaInput} />
+          <FormInput id="empresaLocal" label="Local de Trabalho:" placeholder="Local de Trabalho" type="text" value={formData.empresaLocal} onChange={manipularMudancaInput} textOnly />
+          <FormInput id="empresaTel" label="Telefone da Empresa:" placeholder="(xx) xxxxx-xxxx" type="text" value={formData.empresaTel} onChange={manipularMudancaInput} mask="phone" />
         </div>
 
         <h3 className="my-5 font-bold">DADOS FAMILIARES</h3>
         <div className={inputstyle}>
-          <FormInput id="pai" label="Nome do Pai:" placeholder="Nome do Pai" type="text" value={formData.pai} onChange={manipularMudancaInput}/>
-          <FormInput id="mae" label="Nome da Mãe:" placeholder="Nome da Mãe" type="text" value={formData.mae} onChange={manipularMudancaInput} />
+          <FormInput id="pai" label="Nome do Pai:" placeholder="Nome do Pai" type="text" value={formData.pai} onChange={manipularMudancaInput} textOnly />
+          <FormInput id="mae" label="Nome da Mãe:" placeholder="Nome da Mãe" type="text" value={formData.mae} onChange={manipularMudancaInput} textOnly />
           <FormInput id="numFilhos" label="Nº de Filhos:" placeholder="Nº de filhos" type="number" value={String(formData.numFilhos)} onChange={manipularMudancaInput}/>
-          <FormInput id="conjuge" label="Nome do Cônjuge:" placeholder="Nome do Cônjuge" type="text" value={formData.conjuge} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'}/>
-          <FormInput id="conjugeTel" label="Telefone do Cônjuge:" placeholder="(xx) xxxxx-xxxx" value={formData.conjugeTel} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'} />
+          <FormInput id="conjuge" label="Nome do Cônjuge:" placeholder="Nome do Cônjuge" type="text" value={formData.conjuge} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'} textOnly />
+          <FormInput id="conjugeTel" label="Telefone do Cônjuge:" placeholder="(xx) xxxxx-xxxx" value={formData.conjugeTel} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'} mask="phone" />
           <FormInput id="dtCasamento" label="Data do Casamento:" placeholder="" type="date" value={formData.dtCasamento} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'} />
         </div>
 
         <h3 className="my-5 font-bold">DADOS MINISTERIAIS</h3>
         <div className={inputstyle}>
-          <FormInput id="ministerio" label="Ministério que faz parte:" placeholder="Ministério que faz parte" type="text" value={formData.ministerio} onChange={manipularMudancaInput} />
-          <FormInput id="ministerioFunc" label="Função que exerce:" placeholder="Função que exerce" type="text" value={formData.ministerioFunc} onChange={manipularMudancaInput} />
+          <FormInput id="ministerio" label="Ministério que faz parte:" placeholder="Ministério que faz parte" type="text" value={formData.ministerio} onChange={manipularMudancaInput} textOnly />
+          <FormInput id="ministerioFunc" label="Função que exerce:" placeholder="Função que exerce" type="text" value={formData.ministerioFunc} onChange={manipularMudancaInput} textOnly />
           <FormCheckbox id="gfcdLider" label="Lider de GFCD?" checked={formData.gfcdLider} onCheckedChange={(checked) => manipularMudancaCheckbox('gfcdLider', checked)} />
           <FormInput id="dtConversao" label="Data da Conversão:" placeholder="" type="date" required value={formData.dtConversao} onChange={manipularMudancaInput}/>
           <FormCheckbox id="batizado" label="Batizado?" checked={formData.batizado} onCheckedChange={(checked) => manipularMudancaCheckbox('batizado', checked)} />
-          <FormInput id="igrejaBatizado" label="Igreja do Batismo" placeholder="Igreja do Batismo" type="text" value={formData.igrejaBatizado} onChange={manipularMudancaInput} disabled={!formData.batizado} />
+          <FormInput id="igrejaBatizado" label="Igreja do Batismo" placeholder="Igreja do Batismo" type="text" value={formData.igrejaBatizado} onChange={manipularMudancaInput} disabled={!formData.batizado} textOnly />
           <FormInput id="dtBatismo" label="Data do Batismo" placeholder="" type="date" value={formData.dtBatismo} onChange={manipularMudancaInput} disabled={!formData.batizado}/>
           <FormSelect id="tipoAdmissao" label="Tipo de Admissão:" placeholder="Tipo de Admissão" value={formData.tipoAdmissao} onChange={(value) => manipularMudancaSelect('tipoAdmissao', value)} options={[
             { label: "Batismo", value: "Batismo" }, { label: "Vindo de outra igreja", value: "Vindo de outra igreja" }, { label: "Carta de transferência", value: "Carta de transferência"}
@@ -230,7 +230,7 @@ export function Register() {
             { label: "CELULA", value: "CELULA 5" }, { label: "CELULA", value: "CELULA 6" },
           ]} />
           <FormCheckbox id="gfcdConsolidado" label="Já foi consolidado?" checked={formData.gfcdConsolidado} onCheckedChange={(checked) => manipularMudancaCheckbox('gfcdConsolidado', checked)}/>
-          <FormInput id="nomeConsolidador" label="Nome do Consolidador:" placeholder="Nome do Consolidador" type="text" value={formData.nomeConsolidador} onChange={manipularMudancaInput} disabled={!formData.gfcdConsolidado}/>
+          <FormInput id="nomeConsolidador" label="Nome do Consolidador:" placeholder="Nome do Consolidador" type="text" value={formData.nomeConsolidador} onChange={manipularMudancaInput} disabled={!formData.gfcdConsolidado} textOnly />
           <FormSelect id="retiro" label="Já fez retiro?" placeholder="Já fez retiro?" value={formData.retiro} onChange={(value) => manipularMudancaSelect('retiro', value)} options={[
             { label: "Pre-encontro", value: "Pre-encontro" }, { label: "Encontro", value: "Encontro"}, { label: "Pós-encontro", value: "Pós-encontro"}
           ]} />
@@ -243,7 +243,7 @@ export function Register() {
         )}
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          {isLoggedIn && (
+          {isEditMode && (
             <Button id="btn-back" variant="outline" onClick={() => router.push('/table')}>
               VOLTAR PARA A TABELA
             </Button>
