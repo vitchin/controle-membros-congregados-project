@@ -132,10 +132,11 @@ export function Register() {
   const manipularBlurCep = async (e: React.FocusEvent<HTMLInputElement>) => {
     const cep = e.target.value.replace(/\D/g, "");
 
-    if (cep.length !== 8) {
-      setCepError("CEP inválido. Deve conter 8 dígitos.");
+    if(cep === "")
       return;
-    }
+
+    if (cep.length !== 8)
+      return setCepError("CEP inválido. Deve conter 8 dígitos.");
 
     setCepError("");
 
@@ -155,7 +156,7 @@ export function Register() {
         }));
       }
     } catch (error) {
-      console.error("Erro ao buscar CEP:", error);
+      console.error("Erro ao request CEP:", error);
       setCepError("Erro ao buscar CEP. Verifique sua conexão.");
     }
   };
