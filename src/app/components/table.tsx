@@ -123,19 +123,19 @@ export function TabelaPessoas() {
 
   const columns: ColumnDef<Pessoa>[] = React.useMemo(() => [
     { accessorKey: "nome", header: "Nome" }, { accessorKey: "sexo", header: "Sexo" },
-    { accessorKey: "dtNascimento", header: "Data de Nascimento" }, { accessorKey: "estadoCivil", header: "Estado Civil" },
+    { accessorKey: "dtNascimento", header: "Nascimento" }, { accessorKey: "estadoCivil", header: "Estado Civil" },
     { accessorKey: "numTel", header: "Telefone" }, { accessorKey: "email", header: "Email" },
     { accessorKey: "cep", header: "CEP" }, { accessorKey: "endereco", header: "Endereço" },
     { accessorKey: "cidade", header: "Cidade" }, { accessorKey: "bairro", header: "Bairro" },
-    { accessorKey: "uf", header: "UF" }, { accessorKey: "natural", header: "Natural de" },
+    { accessorKey: "uf", header: "UF" }, { accessorKey: "natural", header: "Naturalidade" },
     { accessorKey: "apelido", header: "Conhecido por" }, { accessorKey: "escola", header: "Escolaridade" },
-    { accessorKey: "empresaTel", header: "Tel. Trabalho" }, { accessorKey: "empresaLocal", header: "Onde Trabalha" },
+    { accessorKey: "empresaTel", header: "Tel. Trabalho" }, { accessorKey: "empresaLocal", header: "Local Trabalho" },
     { accessorKey: "conjuge", header: "Cônjuge" }, { accessorKey: "conjugeTel", header: "Tel. Cônjuge" },
-    { accessorKey: "dtCasamento", header: "Data do Casamento" }, { accessorKey: "pai", header: "Nome do Pai" },
-    { accessorKey: "mae", header: "Nome da Mãe" }, { accessorKey: "numFilhos", header: "N° Filhos" },
-    { accessorKey: "ministerio", header: "Ministério" }, { accessorKey: "ministerioFunc", header: "Função no Ministério" },
+    { accessorKey: "dtCasamento", header: "Casamento" }, { accessorKey: "pai", header: "Pai" },
+    { accessorKey: "mae", header: "Mãe" }, { accessorKey: "numFilhos", header: "N° Filhos" },
+    { accessorKey: "ministerio", header: "Ministério" }, { accessorKey: "ministerioFunc", header: "Função" },
     { accessorKey: "gfcdLider",  header: "Líder GFCD?", cell: ({ row }) => (row.getValue("gfcdLider") ? "Sim" : "Não") },
-    { accessorKey: "dtBatismo", header: "Data do Batismo" },
+    { accessorKey: "dtBatismo", header: "Batismo" },
     { accessorKey: "batizado", header: "Batizado?", cell: ({ row }) => (row.getValue("batizado") ? "Sim" : "Não") },
     { accessorKey: "igrejaBatizado", header: "Igreja Batismo" }, { accessorKey: "dtAdmissao", header: "Admissão" },
     { accessorKey: "tipoAdmissao", header: "Tipo Admissão" }, { accessorKey: "dtConversao", header: "Data Extra" },
@@ -216,8 +216,12 @@ export function TabelaPessoas() {
         </Button>
       </div>
 
-      <h2 className="text-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4">TABELA MEMBROS/CONGREGADOS</h2>
-      <p className="mb-4 text-center text-gray-500">Aqui estão os membros e congregados registrados.</p>
+      <h2 className="text-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4">
+        TABELA MEMBROS/CONGREGADOS
+      </h2>
+      <p className="mb-4 text-center text-gray-500">
+        Aqui estão os membros e congregados registrados.
+      </p>
 
       <div className="flex flex-col sm:flex-row items-center justify-between gap-2 py-4">
         <Input
@@ -294,7 +298,6 @@ export function TabelaPessoas() {
           </TableBody>
         </Table>
       </div>
-
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -364,7 +367,6 @@ export function TabelaPessoas() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
     </main>
   );
 }

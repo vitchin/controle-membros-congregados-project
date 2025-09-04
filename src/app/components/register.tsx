@@ -72,7 +72,31 @@ export function Register() {
 
   const manipularMudancaInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value, type } = e.target as HTMLInputElement & { id: keyof FormData };
-    setFormData((prev) => ({ ...prev, [id]: type === 'number' ? (value === '' ? '' : Number(value)) : value }));
+
+    const textOnlyFields = ['nome', 'apelido', 'natural', 'profissao', 'bairro', 'cidade', 'empresaLocal', 'pai', 'mae', 'conjuge', 'ministerio', 'ministerioFunc', 'igrejaBatizado', 'nomeConsolidador'];
+    const phoneFields = ['numTel', 'empresaTel', 'conjugeTel'];
+
+    let finalValue: string | number = value;
+
+    if (textOnlyFields.includes(id)) {
+      finalValue = value.replace(/[0-9]/g, '').toUpperCase();
+    } else if (phoneFields.includes(id)) {
+      const numericValue = value.replace(/\D/g, '').slice(0, 11);
+      if (numericValue.length > 6) {
+        finalValue = numericValue.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+      } else if (numericValue.length > 2) {
+        finalValue = numericValue.replace(/^(\d{2})(\d*)/, '($1) $2');
+      } else {
+        finalValue = numericValue;
+      }
+    } else if (type === 'number') {
+      finalValue = value === '' ? '' : Number(value);
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [id]: finalValue,
+    }));
   };
 
   const manipularMudancaSelect = (id: keyof FormData, value: string) => {
@@ -162,7 +186,7 @@ export function Register() {
       <form className="w-full" onSubmit={submeterFormulario}>
         <h3 className="mb-5 font-bold">DADOS PESSOAIS</h3>
         <div className={inputstyle}>
-          <FormInput id="nome" label="Nome:" placeholder="Nome completo" required value={formData.nome} onChange={manipularMudancaInput} />
+          <FormInput id="nome" label="Nome:" placeholder="Nome completo" required value={formData.nome} onChange={manipularMudancaInput} disabled={isEditMode} />
           <FormInput id="apelido" label="Nome social:" placeholder="Nome social" type="text" value={formData.apelido} onChange={manipularMudancaInput} />
           <FormSelect id="sexo" label="Sexo:" placeholder="Sexo" required value={formData.sexo} onChange={(value) => manipularMudancaSelect('sexo', value)} options={[
             { label: "Masculino", value: "Masculino" }, { label: "Feminino", value: "Feminino" }
@@ -181,18 +205,19 @@ export function Register() {
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">ENDEREÇO</h4>
         <div className={inputstyle}>
-          <FormInput id="endereco" label="Endereço:" placeholder="Endereço" type="text" required value={formData.endereco} onChange={manipularMudancaInput} />
           <div>
-            <FormInput id="cep" label="CEP:" placeholder="xxxxx-xxx" type="text" value={formData.cep} onChange={manipularMudancaInput} onBlur={manipularBlurCep} />
+            <FormInput id="cep" label="CEP:" placeholder="xxxxx-xxx" type="text" required value={formData.cep} onChange={manipularMudancaInput} onBlur={manipularBlurCep} />
             {cepError && <p className="text-red-500 text-xs mt-1">{cepError}</p>}
           </div>
-          <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" value={formData.bairro} onChange={manipularMudancaInput} />
-          <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" value={formData.cidade} onChange={manipularMudancaInput} />
+          <FormInput id="endereco" label="Endereço:" placeholder="Endereço" type="text" required value={formData.endereco} onChange={manipularMudancaInput} />
+          <FormInput id="complemento" label="Complemento:" placeholder="Complemento" type="text" value={formData.complemento} onChange={manipularMudancaInput} />
+          <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" required value={formData.bairro} onChange={manipularMudancaInput} />
+          <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" required value={formData.cidade} onChange={manipularMudancaInput} />
           <FormSelect id="uf" placeholder="UF" label="UF:" value={formData.uf} onChange={(value) => manipularMudancaSelect('uf', value)} options={estadosBrasil}/>
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">TRABALHO</h4>
         <div className={inputstyle}>
-          <FormInput id="empresaLocal" label="Onde Trabalha?" placeholder="Local de Trabalho" type="text" value={formData.empresaLocal} onChange={manipularMudancaInput}/>
+          <FormInput id="empresaLocal" label="Local de Trabalho:" placeholder="Local de Trabalho" type="text" value={formData.empresaLocal} onChange={manipularMudancaInput}/>
           <FormInput id="empresaTel" label="Telefone da Empresa:" placeholder="(xx) xxxxx-xxxx" type="text" value={formData.empresaTel} onChange={manipularMudancaInput} />
         </div>
 
@@ -200,10 +225,10 @@ export function Register() {
         <div className={inputstyle}>
           <FormInput id="pai" label="Nome do Pai:" placeholder="Nome do Pai" type="text" value={formData.pai} onChange={manipularMudancaInput}/>
           <FormInput id="mae" label="Nome da Mãe:" placeholder="Nome da Mãe" type="text" value={formData.mae} onChange={manipularMudancaInput} />
-          <FormInput id="numFilhos" label="Nº de Filhos:" placeholder="Nº de filhos" type="number" value={String(formData.numFilhos)} onChange={manipularMudancaInput}  disabled={formData.estadoCivil !== 'Casado' && formData.estadoCivil !== 'Divorciado' }/>
-          <FormInput id="conjuge" label="Nome do Cônjuge:" placeholder="Nome do Cônjuge" type="text" value={formData.conjuge} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado' && formData.estadoCivil !== 'Divorciado' }/>
-          <FormInput id="conjugeTel" label="Telefone do Cônjuge:" placeholder="(xx) xxxxx-xxxx" value={formData.conjugeTel} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado' && formData.estadoCivil !== 'Divorciado' } />
-          <FormInput id="dtCasamento" label="Data do Casamento:" placeholder="" type="date" value={formData.dtCasamento} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado' && formData.estadoCivil !== 'Divorciado'} />
+          <FormInput id="numFilhos" label="Nº de Filhos:" placeholder="Nº de filhos" type="number" value={String(formData.numFilhos)} onChange={manipularMudancaInput}/>
+          <FormInput id="conjuge" label="Nome do Cônjuge:" placeholder="Nome do Cônjuge" type="text" value={formData.conjuge} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'}/>
+          <FormInput id="conjugeTel" label="Telefone do Cônjuge:" placeholder="(xx) xxxxx-xxxx" value={formData.conjugeTel} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'} />
+          <FormInput id="dtCasamento" label="Data do Casamento:" placeholder="" type="date" value={formData.dtCasamento} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== 'Casado'} />
         </div>
 
         <h3 className="my-5 font-bold">DADOS MINISTERIAIS</h3>
@@ -211,7 +236,7 @@ export function Register() {
           <FormInput id="ministerio" label="Ministério que faz parte:" placeholder="Ministério que faz parte" type="text" value={formData.ministerio} onChange={manipularMudancaInput} />
           <FormInput id="ministerioFunc" label="Função que exerce:" placeholder="Função que exerce" type="text" value={formData.ministerioFunc} onChange={manipularMudancaInput} />
           <FormCheckbox id="gfcdLider" label="Lider de GFCD?" checked={formData.gfcdLider} onCheckedChange={(checked) => manipularMudancaCheckbox('gfcdLider', checked)} />
-          <FormInput id="dtConversao" label="Data da Conversão:" placeholder="" type="date" value={formData.dtConversao} onChange={manipularMudancaInput}/>
+          <FormInput id="dtConversao" label="Data da Conversão:" placeholder="" type="date" required value={formData.dtConversao} onChange={manipularMudancaInput}/>
           <FormCheckbox id="batizado" label="Batizado?" checked={formData.batizado} onCheckedChange={(checked) => manipularMudancaCheckbox('batizado', checked)} />
           <FormInput id="igrejaBatizado" label="Igreja do Batismo" placeholder="Igreja do Batismo" type="text" value={formData.igrejaBatizado} onChange={manipularMudancaInput} disabled={!formData.batizado} />
           <FormInput id="dtBatismo" label="Data do Batismo" placeholder="" type="date" value={formData.dtBatismo} onChange={manipularMudancaInput} disabled={!formData.batizado}/>
@@ -224,15 +249,9 @@ export function Register() {
         <h3 className="my-5 font-bold">DADOS ADICIONAIS</h3>
         <div className={inputstyle}>
           <FormSelect id="gfcdFrequentado" label="GFCD que frequenta:" placeholder="GFCD que frequenta" value={formData.gfcdFrequentado} onChange={(value) => manipularMudancaSelect('gfcdFrequentado', value)} options={[
-            { label: "PHILOS", value: "CELULA 1" }, { label: "TEMPO DE DEUS", value: "CELULA 2" },
-            { label: "RENASCER", value: "CELULA 3" }, { label: "SHEKINAH", value: "CELULA 4" },
-            { label: "KADOSH", value: "CELULA 5" }, { label: "RUAH", value: "CELULA 6" },
-            { label: "PENIEL", value: "CELULA 7" }, { label: "JAVÉ SHAMMAH", value: "CELULA 8" },
-            { label: "RENASCER", value: "CELULA 9" }, { label: "RUAH", value: "CELULA 10" },
-            { label: "REUEL", value: "CELULA 11" }, { label: "LIRIO DOS VALES", value: "CELULA 12" },
-            { label: "KOINONIA", value: "CELULA 13" }, { label: "AMAI", value: "CELULA 14" },
-            { label: "JEOVÁ JIREH", value: "CELULA 15" }, { label: "LEÃO A TRIBO DE JUDÁ", value: "CELULA 16" },
-            { label: "HERDEIRAS DO REI", value: "CELULA 17" }, { label: "VIDA", value: "CELULA 18" },
+            { label: "CELULA", value: "CELULA 1" }, { label: "CELULA", value: "CELULA 2" },
+            { label: "CELULA", value: "CELULA 3" }, { label: "CELULA", value: "CELULA 4" },
+            { label: "CELULA", value: "CELULA 5" }, { label: "CELULA", value: "CELULA 6" },
           ]} />
           <FormCheckbox id="gfcdConsolidado" label="Já foi consolidado?" checked={formData.gfcdConsolidado} onCheckedChange={(checked) => manipularMudancaCheckbox('gfcdConsolidado', checked)}/>
           <FormInput id="nomeConsolidador" label="Nome do Consolidador:" placeholder="Nome do Consolidador" type="text" value={formData.nomeConsolidador} onChange={manipularMudancaInput} disabled={!formData.gfcdConsolidado}/>
@@ -253,7 +272,7 @@ export function Register() {
               VOLTAR PARA A TABELA
             </Button>
           )}
-          <Button id="btn-register" className="max-w-full lg:w-[350px] md:w-[150px]" type="submit">
+          <Button id="btn-register" className="w-full" type="submit">
             {isEditMode ? "CONFIRMAR" : "REGISTRAR"}
           </Button>
         </div>
