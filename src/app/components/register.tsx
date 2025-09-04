@@ -228,14 +228,13 @@ export function Register() {
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">ENDEREÇO</h4>
         <div className={inputstyle}>
+          <FormInput id="endereco" label="Endereço:" placeholder="Endereço" type="text" required value={formData.endereco} onChange={manipularMudancaInput} />
           <div>
-            <FormInput id="cep" label="CEP:" placeholder="xxxxx-xxx" type="text" required value={formData.cep} onChange={manipularMudancaInput} onBlur={manipularBlurCep} />
+            <FormInput id="cep" label="CEP:" placeholder="xxxxx-xxx" type="text" value={formData.cep} onChange={manipularMudancaInput} onBlur={manipularBlurCep} />
             {cepError && <p className="text-red-500 text-xs mt-1">{cepError}</p>}
           </div>
-          <FormInput id="endereco" label="Endereço:" placeholder="Endereço" type="text" required value={formData.endereco} onChange={manipularMudancaInput} />
-          <FormInput id="complemento" label="Complemento:" placeholder="Complemento" type="text" value={formData.complemento} onChange={manipularMudancaInput} />
-          <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" required value={formData.bairro} onChange={manipularMudancaInput} />
-          <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" required value={formData.cidade} onChange={manipularMudancaInput} />
+          <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" value={formData.bairro} onChange={manipularMudancaInput} />
+          <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" value={formData.cidade} onChange={manipularMudancaInput} />
           <FormSelect id="uf" placeholder="UF" label="UF:" value={formData.uf} onChange={(value) => manipularMudancaSelect('uf', value)} options={estadosBrasil}/>
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">TRABALHO</h4>
