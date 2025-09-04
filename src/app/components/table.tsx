@@ -216,12 +216,8 @@ export function TabelaPessoas() {
         </Button>
       </div>
 
-      <h2 className="text-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4">
-        TABELA MEMBROS/CONGREGADOS
-      </h2>
-      <p className="mb-4 text-center text-gray-500">
-        Aqui estão os membros e congregados registrados.
-      </p>
+      <h2 className="text-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4">TABELA MEMBROS/CONGREGADOS</h2>
+      <p className="mb-4 text-center text-gray-500">Aqui estão os membros e congregados registrados.</p>
 
       <div className="flex flex-col sm:flex-row items-center justify-between gap-2 py-4">
         <Input
@@ -298,6 +294,7 @@ export function TabelaPessoas() {
           </TableBody>
         </Table>
       </div>
+
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -367,6 +364,7 @@ export function TabelaPessoas() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </main>
   );
 }
