@@ -268,11 +268,20 @@ export function Register() {
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
           {isLoggedIn && (
-            <Button id="btn-back" variant="outline" onClick={() => router.push('/table')}>
+            <Button
+              id="btn-back"
+              variant="outline"
+              className="w-full sm:w-auto flex-1"
+              onClick={() => router.push('/table')}
+            >
               VOLTAR PARA A TABELA
             </Button>
           )}
-          <Button id="btn-register" className="w-full" type="submit">
+          <Button
+            id="btn-register"
+            type="submit"
+            className="w-full sm:w-auto flex-1"
+          >
             {isEditMode ? "CONFIRMAR" : "REGISTRAR"}
           </Button>
         </div>
