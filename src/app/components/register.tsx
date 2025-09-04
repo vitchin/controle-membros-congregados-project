@@ -70,27 +70,49 @@ export function Register() {
     }
   }, [params]);
 
+  // Funções auxiliares
+  function formatTextOnly(value: string): string {
+    return value.replace(/[0-9]/g, '').toUpperCase();
+  }
+
+  function formatPhone(value: string): string {
+    const numericValue = value.replace(/\D/g, '').slice(0, 11);
+
+    if (numericValue.length > 6) {
+      return numericValue.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+    } 
+    if (numericValue.length > 2) {
+      return numericValue.replace(/^(\d{2})(\d*)/, '($1) $2');
+    }
+    return numericValue;
+  }
+
+  function formatNumber(value: string): number | string {
+    return value === '' ? '' : Number(value);
+  }
+
+  function formatCep(value: string): string {
+    const numericCep = value.replace(/\D/g, '').slice(0, 8);
+    return numericCep.length > 5 ? numericCep.replace(/^(\d{5})(\d{3}).*/, '$1-$2') : numericCep;
+  }
+
   const manipularMudancaInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value, type } = e.target as HTMLInputElement & { id: keyof FormData };
 
     const textOnlyFields = ['nome', 'apelido', 'natural', 'profissao', 'bairro', 'cidade', 'empresaLocal', 'pai', 'mae', 'conjuge', 'ministerio', 'ministerioFunc', 'igrejaBatizado', 'nomeConsolidador'];
     const phoneFields = ['numTel', 'empresaTel', 'conjugeTel'];
+    const cepField = 'cep';
 
     let finalValue: string | number = value;
 
     if (textOnlyFields.includes(id)) {
-      finalValue = value.replace(/[0-9]/g, '').toUpperCase();
+      finalValue = formatTextOnly(value);
     } else if (phoneFields.includes(id)) {
-      const numericValue = value.replace(/\D/g, '').slice(0, 11);
-      if (numericValue.length > 6) {
-        finalValue = numericValue.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
-      } else if (numericValue.length > 2) {
-        finalValue = numericValue.replace(/^(\d{2})(\d*)/, '($1) $2');
-      } else {
-        finalValue = numericValue;
-      }
+      finalValue = formatPhone(value);
     } else if (type === 'number') {
-      finalValue = value === '' ? '' : Number(value);
+      finalValue = formatNumber(value);
+    } else if (id === cepField) {
+      finalValue = formatCep(value);
     }
 
     setFormData((prev) => ({
