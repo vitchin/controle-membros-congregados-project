@@ -18,7 +18,7 @@ type FormData = {
   pai: string; mae: string; numFilhos: number | ""; ministerio: string; ministerioFunc: string;
   gfcdLider: boolean; dtBatismo: string; batizado: boolean; igrejaBatizado: string;
   dtAdmissao: string; tipoAdmissao: string; dtConversao: string; gfcdFrequentado: string;
-  gfcdConsolidado: boolean; nomeConsolidador: string; retiro: string; profissao: string; complemento: string;
+  gfcdConsolidado: boolean; nomeConsolidador: string; retiro: string; profissao: string;
 };
 
 const initialFormData: FormData = {
@@ -28,7 +28,7 @@ const initialFormData: FormData = {
   pai: "", mae: "", numFilhos: "", ministerio: "", ministerioFunc: "",
   gfcdLider: false, dtBatismo: "", batizado: false, igrejaBatizado: "",
   dtAdmissao: "", tipoAdmissao: "", dtConversao: "", gfcdFrequentado: "",
-  gfcdConsolidado: false, nomeConsolidador: "", retiro: "", profissao: "", complemento: ""
+  gfcdConsolidado: false, nomeConsolidador: "", retiro: "", profissao: "",
 };
 
 type ViaCepResponse = {
