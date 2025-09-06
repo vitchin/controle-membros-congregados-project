@@ -1,5 +1,4 @@
 "use client";
-"use client";
 
 import { exportTableToExcel } from "@/utils/exportExcel";
 import { useRouter } from "next/navigation";
@@ -335,6 +334,5 @@ export function TabelaPessoas() {
         </DialogContent>
       </Dialog>
     </main>
-  );
   );
 }
