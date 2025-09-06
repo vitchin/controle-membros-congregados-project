@@ -1,7 +1,7 @@
 "use client";
-"use client";
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { FormInput } from "./componentInput";
 import { FormSelect } from "./componentSelect";
@@ -10,6 +10,34 @@ import { database } from "@/lib/firebase";
 import { ref, set, push, get, update } from "firebase/database";
 
 const inputstyle = "mb-6 w-full grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4";
+
+type FormData = {
+  nome: string; sexo: string; dtNascimento: string; estadoCivil: string; numTel: string; email: string; cep: string;
+  endereco: string; cidade: string; bairro: string; uf: string; natural: string; apelido: string; escola: string;
+  empresaTel: string; empresaLocal: string; conjuge: string; conjugeTel: string; dtCasamento: string;
+  pai: string; mae: string; numFilhos: number | ""; ministerio: string; ministerioFunc: string;
+  gfcdLider: boolean; dtBatismo: string; batizado: boolean; igrejaBatizado: string;
+  dtAdmissao: string; tipoAdmissao: string; dtConversao: string; gfcdFrequentado: string;
+  gfcdConsolidado: boolean; nomeConsolidador: string; retiro: string; profissao: string;
+};
+
+const initialFormData: FormData = {
+  nome: "", sexo: "", dtNascimento: "", estadoCivil: "", numTel: "", email: "", cep: "",
+  endereco: "", cidade: "", bairro: "", uf: "", natural: "", apelido: "", escola: "",
+  empresaTel: "", empresaLocal: "", conjuge: "", conjugeTel: "", dtCasamento: "",
+  pai: "", mae: "", numFilhos: "", ministerio: "", ministerioFunc: "",
+  gfcdLider: false, dtBatismo: "", batizado: false, igrejaBatizado: "",
+  dtAdmissao: "", tipoAdmissao: "", dtConversao: "", gfcdFrequentado: "",
+  gfcdConsolidado: false, nomeConsolidador: "", retiro: "", profissao: "",
+};
+
+type ViaCepResponse = {
+  logradouro: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  erro?: boolean;
+};
 
 export function Register() {
   const router = useRouter();
