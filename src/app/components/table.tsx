@@ -1,50 +1,25 @@
 "use client";
+"use client";
 
 import { exportTableToExcel } from "@/utils/exportExcel";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { database } from "@/lib/firebase";
+import { MoreHorizontal } from "lucide-react";
 import Logout from "../../../public/logout.svg";
 import * as React from "react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { ColumnDef,ColumnFiltersState,flexRender,getCoreRowModel,getFilteredRowModel,getPaginationRowModel,useReactTable } from "@tanstack/react-table";
+import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
+import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from "@/components/ui/dialog";
+import { ref, onValue, remove } from "firebase/database";
 
 type Pessoa = {
-  [key: string]: any;
+  id: string;
   nome: string;
   sexo: string;
   dtNascimento: string;
@@ -77,50 +52,11 @@ type Pessoa = {
   tipoAdmissao: string;
   dtConversao: string;
   gfcdFrequentado: string;
-  gfcdConsolidado: string;
+  gfcdConsolidado: boolean;
   nomeConsolidador: string;
   retiro: string;
+  [key: string]: any;
 };
-
-const initialData: Pessoa[] = [
-  {
-    nome: "João",
-    sexo: "Masculino",
-    dtNascimento: "1990/01/01",
-    estadoCivil: "Casado",
-    numTel: "00000-0000",
-    email: "joao@example.com",
-    cep: "54300064",
-    endereco: "Rua Exemplo, 123",
-    cidade: "Jaboatão",
-    bairro: "Centro",
-    uf: "PE",
-    natural: "Recife",
-    apelido: "Zinho",
-    escola: "Superior",
-    empresaTel: "00000-0000",
-    empresaLocal: "EmpresaExemplo",
-    conjuge: "Maria Silva",
-    conjugeTel: "00000-0000",
-    dtCasamento: "2015/06/15",
-    pai: "José Silva",
-    mae: "Ana Souza",
-    numFilhos: 2,
-    ministerio: "Louvor",
-    ministerioFunc: "Guitarrista",
-    gfcdLider: true,
-    dtBatismo: "2010/05/20",
-    batizado: true,
-    igrejaBatizado: "Igreja Exemplo",
-    dtAdmissao: "2012/09/01",
-    tipoAdmissao: "Batismo",
-    dtConversao: "2023/11/12",
-    gfcdFrequentado: "DEUS É FIEL",
-    gfcdConsolidado: "Carlos",
-    nomeConsolidador: "Carlos Dias",
-    retiro: "Encontro",
-  },
-];
 
 export function TabelaPessoas() {
   const router = useRouter();
@@ -132,26 +68,20 @@ export function TabelaPessoas() {
   const [reportColumns, setReportColumns] = React.useState<{[key: string]: boolean}>({});
   const [reportFilename, setReportFilename] = React.useState("relatorio_membros");
 
-  const updatePeopleData = (newPeople: Pessoa[]) => {
-    setPeople(newPeople);
-    localStorage.setItem("people", JSON.stringify(newPeople));
-  };
-
-  const handleDelete = React.useCallback(() => {
+  const excluirPessoa = React.useCallback(() => {
     if (personToDelete) {
-      const newPeople = people.filter((p) => p.nome !== personToDelete.nome); // Assuming 'nome' is unique
-      updatePeopleData(newPeople);
+      const personRef = ref(database, 'membros/' + personToDelete.id);
+      remove(personRef);
       setIsDeleteDialogOpen(false);
       setPersonToDelete(null);
     }
-  }, [people, personToDelete]);
+  }, [personToDelete]);
 
-  const handleEdit = React.useCallback((person: Pessoa) => {
-    localStorage.setItem("personToEdit", JSON.stringify(person));
-    router.push("/register");
+  const editarPessoa = React.useCallback((person: Pessoa) => {
+    router.push(`/register/${person.id}`);
   }, [router]);
 
-  const handleGenerateReport = React.useCallback(() => {
+  const gerarRelatorio = React.useCallback(() => {
     const selectedColumns = Object.keys(reportColumns).filter(col => reportColumns[col]);
     const filteredData = people.map(person => {
       const newPerson: {[key: string]: any} = {};
@@ -183,8 +113,8 @@ export function TabelaPessoas() {
     { accessorKey: "batizado", header: "Batizado?", cell: ({ row }) => (row.getValue("batizado") ? "Sim" : "Não") },
     { accessorKey: "igrejaBatizado", header: "Igreja Batismo" }, { accessorKey: "dtAdmissao", header: "Admissão" },
     { accessorKey: "tipoAdmissao", header: "Tipo Admissão" }, { accessorKey: "dtConversao", header: "Data Extra" },
-    { accessorKey: "gfcdFrequentado", header: "GFCD" }, { accessorKey: "gfcdConsolidado", header: "Consolidado por" },
-    { accessorKey: "nomeConsolidador", header: "Consolidador" }, { accessorKey: "retiro", header: "Retiro" },
+    { accessorKey: "gfcdFrequentado", header: "GFCD" }, { accessorKey: "gfcdConsolidado", header: "Consolidado?", cell: ({ row }) => (row.getValue("gfcdConsolidado") ? "Sim" : "Não") },
+    { accessorKey: "nomeConsolidador", header: "Consolidado por" }, { accessorKey: "retiro", header: "Retiro" },
     {
       id: "actions",
       header: "Ações",
@@ -196,7 +126,7 @@ export function TabelaPessoas() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => handleEdit(row.original)}>
+            <DropdownMenuItem onClick={() => editarPessoa(row.original)}>
               Editar
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -211,16 +141,20 @@ export function TabelaPessoas() {
         </DropdownMenu>
       ),
     },
-  ], [handleEdit]);
+  ], [editarPessoa]);
 
   React.useEffect(() => {
-    const storedPeople = localStorage.getItem("people");
-    if (storedPeople) {
-      setPeople(JSON.parse(storedPeople));
-    } else {
-      localStorage.setItem("people", JSON.stringify(initialData));
-      setPeople(initialData);
-    }
+    const membrosRef = ref(database, 'membros/');
+    const unsubscribe = onValue(membrosRef, (snapshot) => {
+      const data = snapshot.val();
+      const peopleArray: Pessoa[] = data ? Object.keys(data).map(key => ({
+        id: key,
+        ...data[key]
+      })) : [];
+      setPeople(peopleArray);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   React.useEffect(() => {
@@ -245,12 +179,10 @@ export function TabelaPessoas() {
   return (
     <main className="text-[#350700] container mx-auto my-10 px-5 py-8 bg-white border-1 border-solid border-gray-300 rounded-lg shadow-md">
       <div className="w-full flex justify-end mb-4">
-        <Button
-          onClick={() => {
+        <Button onClick={() => {
             localStorage.removeItem("isLoggedIn");
             router.push("/login");
-          }}
-        >
+          }}>
           Sair
           <Image src={Logout} alt="Imagem de sair" className="w-5 h-5" />
         </Button>
@@ -313,10 +245,7 @@ export function TabelaPessoas() {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="whitespace-nowrap px-2 py-1 max-w-[200px] truncate"
-                    >
+                    <TableCell key={cell.id} className="whitespace-nowrap px-2 py-1 max-w-[200px] truncate">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -327,10 +256,7 @@ export function TabelaPessoas() {
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-left">
                   Nenhum resultado encontrado.
                 </TableCell>
               </TableRow>
@@ -338,6 +264,7 @@ export function TabelaPessoas() {
           </TableBody>
         </Table>
       </div>
+
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -352,7 +279,7 @@ export function TabelaPessoas() {
             <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
               Cancelar
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
+            <Button variant="destructive" onClick={excluirPessoa}>
               Excluir
             </Button>
           </DialogFooter>
@@ -403,10 +330,11 @@ export function TabelaPessoas() {
             <Button variant="outline" onClick={() => setIsReportModalOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={handleGenerateReport}>Gerar Relatório</Button>
+            <Button onClick={gerarRelatorio}>Gerar Relatório</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </main>
+  );
   );
 }
