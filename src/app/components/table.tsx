@@ -3,45 +3,18 @@
 import { exportTableToExcel } from "@/utils/exportExcel";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { database } from "@/lib/firebase";
+import { MoreHorizontal } from "lucide-react";
 import Logout from "../../../public/logout.svg";
 import * as React from "react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { database } from "@/lib/firebase";
+import { ColumnDef,ColumnFiltersState,flexRender,getCoreRowModel,getFilteredRowModel,getPaginationRowModel,useReactTable } from "@tanstack/react-table";
+import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
+import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from "@/components/ui/dialog";
 import { ref, onValue, remove } from "firebase/database";
 
 type Pessoa = {
@@ -205,12 +178,10 @@ export function TabelaPessoas() {
   return (
     <main className="text-[#350700] container mx-auto my-10 px-5 py-8 bg-white border-1 border-solid border-gray-300 rounded-lg shadow-md">
       <div className="w-full flex justify-end mb-4">
-        <Button
-          onClick={() => {
+        <Button onClick={() => {
             localStorage.removeItem("isLoggedIn");
             router.push("/login");
-          }}
-        >
+          }}>
           Sair
           <Image src={Logout} alt="Imagem de sair" className="w-5 h-5" />
         </Button>
@@ -273,10 +244,7 @@ export function TabelaPessoas() {
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="whitespace-nowrap px-2 py-1 max-w-[200px] truncate"
-                    >
+                    <TableCell key={cell.id} className="whitespace-nowrap px-2 py-1 max-w-[200px] truncate">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -287,10 +255,7 @@ export function TabelaPessoas() {
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-left">
                   Nenhum resultado encontrado.
                 </TableCell>
               </TableRow>
@@ -298,6 +263,7 @@ export function TabelaPessoas() {
           </TableBody>
         </Table>
       </div>
+
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
