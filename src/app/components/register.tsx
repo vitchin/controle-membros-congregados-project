@@ -305,7 +305,7 @@ export function Register() {
           {isLoggedIn && (
             <Button
               id="btn-back"
-              variant="outline"
+              variant="secondary"
               className="w-full sm:w-auto flex-1"
               onClick={() => router.push('/table')}
             >
@@ -314,9 +314,8 @@ export function Register() {
           )}
           <Button
             id="btn-register"
-            type="submit"
-            className="w-full sm:w-auto flex-1"
-          >
+            type="submit" variant="default"
+            className="w-full sm:w-auto flex-1">
             {isEditMode ? "CONFIRMAR" : "REGISTRAR"}
           </Button>
         </div>

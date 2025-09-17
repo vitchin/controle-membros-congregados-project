@@ -39,8 +39,12 @@ function SelectTrigger({
       className={cn(
         // Base
         "flex w-fit min-w-0 h-12 items-center justify-between gap-2 rounded-md border bg-white px-3 py-1 text-base shadow-md outline-none transition-all",
-        // Cores base e variantes (igual ao input)
-        "border-[#9d3726] text-[#9d3726] placeholder:text-[#b0432f] focus-visible:border-[#9d3726] dark:bg-[#2d1813] dark:border-[#9d3726] dark:text-[#f5e6e2]",
+        // Cores base e variantes
+        "border-[#9d3726] text-[#9d3726] placeholder:text-[#b0432f] dark:bg-[#2d1813] dark:border-[#9d3726] dark:text-[#f5e6e2]",
+        // Hover
+        "hover:border-[#b0432f] hover:shadow-sm dark:hover:border-[#e2c2b8]",
+        // Focus
+        "focus-visible:border-[#9d3726] focus-visible:ring-2 focus-visible:ring-[#9d3726]/30 focus-visible:shadow-md",
         // Disabled
         "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-55 disabled:text-[#ccc]",
         // Aria-invalid

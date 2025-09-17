@@ -207,15 +207,13 @@ export function TabelaPessoas() {
           <Button
             id="btn-add"
             onClick={() => router.push("/register")}
-            className="w-full sm:w-auto"
-          >
+            className="w-full sm:w-auto" variant="secondary">
             ADICIONAR PESSOAS
           </Button>
           <Button
             id="btn-report"
             onClick={() => setIsReportModalOpen(true)}
-            className="w-full sm:w-auto"
-          >
+            className="w-full sm:w-auto" variant="default">
             GERAR RELATÓRIO EXCEL
           </Button>
         </div>
@@ -275,11 +273,11 @@ export function TabelaPessoas() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-              Cancelar
+            <Button variant="secondary" onClick={() => setIsDeleteDialogOpen(false)}>
+              CANCELAR
             </Button>
             <Button variant="destructive" onClick={excluirPessoa}>
-              Excluir
+              EXCLUIR
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -326,10 +324,10 @@ export function TabelaPessoas() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsReportModalOpen(false)}>
-              Cancelar
+            <Button variant="secondary" onClick={() => setIsReportModalOpen(false)}>
+              CANCELAR
             </Button>
-            <Button onClick={gerarRelatorio}>Gerar Relatório</Button>
+            <Button onClick={gerarRelatorio} variant="default">GERAR RELATÓRIO</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
