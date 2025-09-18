@@ -25,7 +25,7 @@ interface FormSelectProps {
 export function FormSelect({id, label, placeholder, options, required = false, disabled = false, value, onChange}: FormSelectProps) {
   return (
     <div className={divinputstyle}>
-      <Label>{label}{required && obrigatorio}</Label>
+      <Label className="mb-1">{label}{required && obrigatorio}</Label>
       <Select disabled={disabled}  value={value} onValueChange={(val) => onChange?.(val)}>
         <SelectTrigger className="w-full" id={id} disabled={disabled}>
           <SelectValue placeholder={placeholder} />
