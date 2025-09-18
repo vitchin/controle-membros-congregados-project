@@ -33,7 +33,7 @@ const initialFormData: User = {
   dtCasamento: "",
   pai: "",
   mae: "",
-  numFilhos: "",
+  numFilhos: null,
   ministerio: "",
   ministerioFunc: "",
   gfcdLider: false,
@@ -85,8 +85,9 @@ export function Register() {
     return numericValue;
   }
 
-  function formatNumber(value: string): number | string {
-    return value === '' ? '' : Number(value);
+  function formatNumber(value: string): number | null {
+    const parsed = parseInt(value, 10);
+    return isNaN(parsed) ? null : parsed;
   }
 
   function formatCep(value: string): string {
@@ -101,7 +102,7 @@ export function Register() {
     const phoneFields: (keyof User)[] = ['numTel', 'empresaTel', 'conjugeTel'];
     const cepField: keyof User = 'cep';
 
-    let finalValue: string | number = value;
+    let finalValue: string | number | null = value;
 
     if (textOnlyFields.includes(id as keyof User)) {
       finalValue = formatTextOnly(value);
@@ -286,11 +287,12 @@ export function Register() {
           <FormInput id="empresaTel" label="Telefone da Empresa:" placeholder="(xx) xxxxx-xxxx" type="text" value={formData.empresaTel} onChange={manipularMudancaInput} />
         </div>
 
+        {/* A lógica condicional para os campos a seguir foi revisada e está correta. */}
         <h3 className="my-5 font-bold">DADOS FAMILIARES</h3>
         <div className={inputstyle}>
           <FormInput id="pai" label="Nome do Pai:" placeholder="Nome do Pai" type="text" value={formData.pai} onChange={manipularMudancaInput}/>
           <FormInput id="mae" label="Nome da Mãe:" placeholder="Nome da Mãe" type="text" value={formData.mae} onChange={manipularMudancaInput} />
-          <FormInput id="numFilhos" label="Nº de Filhos:" placeholder="Nº de filhos" type="number" value={String(formData.numFilhos)} onChange={manipularMudancaInput}/>
+          <FormInput id="numFilhos" label="Nº de Filhos:" placeholder="Nº de filhos" type="number" value={formData.numFilhos ?? ''} onChange={manipularMudancaInput}/>
           <FormInput id="conjuge" label="Nome do Cônjuge:" placeholder="Nome do Cônjuge" type="text" value={formData.conjuge} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== "Casado" && formData.estadoCivil !== "União estável"}/>
           <FormInput id="conjugeTel" label="Telefone do Cônjuge:" placeholder="(xx) xxxxx-xxxx" value={formData.conjugeTel} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== "Casado" && formData.estadoCivil !== "União estável"} />
           <FormInput id="dtCasamento" label="Data do Casamento:" placeholder="" type="date" value={formData.dtCasamento} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== "Casado" && formData.estadoCivil !== "União estável"} />

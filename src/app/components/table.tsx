@@ -13,8 +13,8 @@ import * as React from "react";
 import { ColumnDef,ColumnFiltersState,flexRender,getCoreRowModel,getFilteredRowModel,getPaginationRowModel,useReactTable } from "@tanstack/react-table";
 import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
-import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from "@/components/ui/dialog";
 import { DeleteUserDialog } from "./deleteUserDialog";
+import { ReportDialog } from "./reportDialog";
 import { User } from "@/app/api/users/db";
 
 function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
@@ -24,6 +24,16 @@ function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
   }
   return result;
 }
+
+const formatDate = (dateString: string) => {
+  if (!dateString) return "";
+  // Corrige o problema de fuso horário
+  const date = new Date(dateString);
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  return `${day}/${month}/${year}`;
+};
 
 export function TabelaPessoas() {
   const router = useRouter();
@@ -83,7 +93,8 @@ export function TabelaPessoas() {
 
   const columns: ColumnDef<User>[] = React.useMemo(() => [
     { accessorKey: "nome", header: "Nome" }, { accessorKey: "sexo", header: "Sexo" },
-    { accessorKey: "dtNascimento", header: "Data Nascimento" }, { accessorKey: "estadoCivil", header: "Estado Civil" },
+    { accessorKey: "dtNascimento", header: "Data Nascimento", cell: ({ row }) => formatDate(row.getValue("dtNascimento")) },
+    { accessorKey: "estadoCivil", header: "Estado Civil" },
     { accessorKey: "numTel", header: "Telefone" }, { accessorKey: "email", header: "Email" },
     { accessorKey: "cep", header: "CEP" }, { accessorKey: "endereco", header: "Endereço" },
     { accessorKey: "cidade", header: "Cidade" }, { accessorKey: "bairro", header: "Bairro" },
@@ -91,15 +102,19 @@ export function TabelaPessoas() {
     { accessorKey: "apelido", header: "Conhecido por" }, { accessorKey: "escola", header: "Escolaridade" },
     { accessorKey: "empresaTel", header: "Tel. Trabalho" }, { accessorKey: "empresaLocal", header: "Local Trabalho" },
     { accessorKey: "conjuge", header: "Cônjuge" }, { accessorKey: "conjugeTel", header: "Tel. Cônjuge" },
-    { accessorKey: "dtCasamento", header: "Casamento" }, { accessorKey: "pai", header: "Pai" },
+    { accessorKey: "dtCasamento", header: "Casamento", cell: ({ row }) => formatDate(row.getValue("dtCasamento")) },
+    { accessorKey: "pai", header: "Pai" },
     { accessorKey: "mae", header: "Mãe" }, { accessorKey: "numFilhos", header: "N° Filhos" },
     { accessorKey: "ministerio", header: "Cargo Ministérial" }, { accessorKey: "ministerioFunc", header: "Função no ministério" },
     { accessorKey: "gfcdLider",  header: "Líder GFCD?", cell: ({ row }) => (row.getValue("gfcdLider") ? "Sim" : "Não") },
-    { accessorKey: "dtBatismo", header: "Data Batismo" },
+    { accessorKey: "dtBatismo", header: "Data Batismo", cell: ({ row }) => formatDate(row.getValue("dtBatismo")) },
     { accessorKey: "batizado", header: "Batizado?", cell: ({ row }) => (row.getValue("batizado") ? "Sim" : "Não") },
-    { accessorKey: "igrejaBatizado", header: "Igreja Batismo" }, { accessorKey: "dtAdmissao", header: "Data Admissão" },
-    { accessorKey: "tipoAdmissao", header: "Tipo Admissão" }, { accessorKey: "dtConversao", header: "Data Conversão" },
-    { accessorKey: "gfcdFrequentado", header: "GFCD Frequentado" }, { accessorKey: "gfcdConsolidado", header: "Consolidado?", cell: ({ row }) => (row.getValue("gfcdConsolidado") ? "Sim" : "Não") },
+    { accessorKey: "igrejaBatizado", header: "Igreja Batismo" },
+    { accessorKey: "dtAdmissao", header: "Data Admissão", cell: ({ row }) => formatDate(row.getValue("dtAdmissao")) },
+    { accessorKey: "tipoAdmissao", header: "Tipo Admissão" },
+    { accessorKey: "dtConversao", header: "Data Conversão", cell: ({ row }) => formatDate(row.getValue("dtConversao")) },
+    { accessorKey: "gfcdFrequentado", header: "GFCD Frequentado" },
+    { accessorKey: "gfcdConsolidado", header: "Consolidado?", cell: ({ row }) => (row.getValue("gfcdConsolidado") ? "Sim" : "Não") },
     { accessorKey: "formaConsolidacao", header: "Forma Consolidação" },  { accessorKey: "outrosFormaConsolidacao", header: "Outros (Consolidação)" },
     { accessorKey: "profissao", header: "Profissão" }, { accessorKey: "igrejaAnterior", header: "Igreja Anterior" },
     { accessorKey: "retiro", header: "Encontro" },
@@ -130,17 +145,10 @@ export function TabelaPessoas() {
     },
   ], [editarPessoa]);
 
-  // Type guard para colunas com accessorKey
-  function hasAccessorKey(
-    col: ColumnDef<User>
-  ): col is ColumnDef<User> & { accessorKey: keyof User } {
-    return "accessorKey" in col && typeof col.accessorKey === "string";
-  }
-
   React.useEffect(() => {
     // Inicializa reportColumns apenas com accessorKey que são chaves de User
     const initialColumns = columns
-      .filter(hasAccessorKey)
+      .filter((col): col is ColumnDef<User> & { accessorKey: keyof User } => "accessorKey" in col && typeof col.accessorKey === "string")
       .reduce(
         (acc, col) => ({ ...acc, [col.accessorKey]: true }),
         {} as Record<keyof User, boolean>
@@ -254,56 +262,16 @@ export function TabelaPessoas() {
         user={personToDelete}
       />
 
-      <Dialog open={isReportModalOpen} onOpenChange={setIsReportModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Gerar Relatório Excel</DialogTitle>
-            <DialogDescription>
-              Selecione as colunas que deseja incluir no relatório e defina o nome do arquivo.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4 max-h-60 overflow-y-auto">
-              {columns
-                .filter(hasAccessorKey)
-                .map((column) => {
-                  const accessorKey = column.accessorKey;
-                  return (
-                    <div key={accessorKey} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={String(accessorKey)}
-                        checked={reportColumns[accessorKey]}
-                        onCheckedChange={(checked) =>
-                          setReportColumns(prev => ({ ...prev, [accessorKey]: !!checked }))
-                        }
-                      />
-                      <Label htmlFor={String(accessorKey)} className="capitalize">
-                        {String(column.header)}
-                      </Label>
-                    </div>
-                  );
-                })}
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="filename" className="text-right">
-                Nome do Arquivo
-              </Label>
-              <Input
-                id="filename"
-                value={reportFilename}
-                onChange={(e) => setReportFilename(e.target.value)}
-                className="col-span-3"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setIsReportModalOpen(false)}>
-              CANCELAR
-            </Button>
-            <Button onClick={gerarRelatorio} variant="default">GERAR RELATÓRIO</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ReportDialog
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        columns={columns}
+        reportColumns={reportColumns}
+        setReportColumns={setReportColumns}
+        reportFilename={reportFilename}
+        setReportFilename={setReportFilename}
+        gerarRelatorio={gerarRelatorio}
+      />
     </main>
   );
 }
