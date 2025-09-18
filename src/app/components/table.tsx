@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { database } from "@/lib/firebase";
 import { MoreHorizontal } from "lucide-react";
 import Logout from "../../../public/logout.svg";
 import * as React from "react";
@@ -15,7 +14,8 @@ import { ColumnDef,ColumnFiltersState,flexRender,getCoreRowModel,getFilteredRowM
 import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
 import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from "@/components/ui/dialog";
-import { ref, onValue, remove } from "firebase/database";
+import { DeleteUserDialog } from "./deleteUserDialog";
+import { User } from "@/app/api/users/db";
 
 function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
   const result = {} as Pick<T, K>;
@@ -25,72 +25,52 @@ function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
   return result;
 }
 
-type Pessoa = {
-  id: string;
-  nome: string;
-  sexo: string;
-  dtNascimento: string;
-  estadoCivil: string;
-  numTel: string;
-  email: string;
-  cep: string;
-  endereco: string;
-  cidade: string;
-  bairro: string;
-  uf: string;
-  natural: string;
-  apelido: string;
-  escola: string;
-  empresaTel: string;
-  empresaLocal: string;
-  conjuge: string;
-  conjugeTel: string;
-  dtCasamento: string;
-  pai: string;
-  mae: string;
-  numFilhos: number;
-  ministerio: string;
-  ministerioFunc: string;
-  gfcdLider: boolean;
-  dtBatismo: string;
-  batizado: boolean;
-  igrejaBatizado: string;
-  dtAdmissao: string;
-  tipoAdmissao: string;
-  dtConversao: string;
-  gfcdFrequentado: string;
-  gfcdConsolidado: boolean;
-  nomeConsolidador: string;
-  retiro: string;
-};
-
 export function TabelaPessoas() {
   const router = useRouter();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [people, setPeople] = React.useState<Pessoa[]>([]);
+  const [people, setPeople] = React.useState<User[]>([]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [personToDelete, setPersonToDelete] = React.useState<Pessoa | null>(null);
+  const [personToDelete, setPersonToDelete] = React.useState<User | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = React.useState(false);
-  // Ajuste da tipagem de reportColumns
-  const [reportColumns, setReportColumns] = React.useState<Record<keyof Pessoa, boolean>>({} as Record<keyof Pessoa, boolean>);
+  const [reportColumns, setReportColumns] = React.useState<Record<keyof User, boolean>>({} as Record<keyof User, boolean>);
   const [reportFilename, setReportFilename] = React.useState("relatorio_membros");
 
-  const excluirPessoa = React.useCallback(() => {
+  const fetchUsers = async () => {
+    const response = await fetch('/api/users');
+    const data = await response.json();
+    setPeople(data);
+  };
+
+  React.useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleDeleteConfirm = async (motivo: string, outrosMotivo?: string) => {
     if (personToDelete) {
-      const personRef = ref(database, 'membros/' + personToDelete.id);
-      remove(personRef);
+      await fetch(`/api/users/${personToDelete.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dataExclusao: new Date().toISOString(),
+          motivoExclusao: motivo,
+          outrosMotivoExclusao: outrosMotivo,
+        }),
+      });
       setIsDeleteDialogOpen(false);
       setPersonToDelete(null);
+      fetchUsers(); // Refresh table
     }
-  }, [personToDelete]);
+  };
 
-  const editarPessoa = React.useCallback((person: Pessoa) => {
+  const editarPessoa = React.useCallback((person: User) => {
     router.push(`/register/${person.id}`);
   }, [router]);
 
   // dentro do componente, ajuste a função gerarRelatorio
   const gerarRelatorio = React.useCallback(() => {
-    const selectedColumns = (Object.keys(reportColumns) as Array<keyof Pessoa>)
+    const selectedColumns = (Object.keys(reportColumns) as Array<keyof User>)
       .filter(col => reportColumns[col]);
 
     const filteredData = people.map(person =>
@@ -101,7 +81,7 @@ export function TabelaPessoas() {
     setIsReportModalOpen(false);
   }, [people, reportColumns, reportFilename]);
 
-  const columns: ColumnDef<Pessoa>[] = React.useMemo(() => [
+  const columns: ColumnDef<User>[] = React.useMemo(() => [
     { accessorKey: "nome", header: "Nome" }, { accessorKey: "sexo", header: "Sexo" },
     { accessorKey: "dtNascimento", header: "Nascimento" }, { accessorKey: "estadoCivil", header: "Estado Civil" },
     { accessorKey: "numTel", header: "Telefone" }, { accessorKey: "email", header: "Email" },
@@ -120,7 +100,7 @@ export function TabelaPessoas() {
     { accessorKey: "igrejaBatizado", header: "Igreja Batismo" }, { accessorKey: "dtAdmissao", header: "Admissão" },
     { accessorKey: "tipoAdmissao", header: "Tipo Admissão" }, { accessorKey: "dtConversao", header: "Data Extra" },
     { accessorKey: "gfcdFrequentado", header: "GFCD" }, { accessorKey: "gfcdConsolidado", header: "Consolidado?", cell: ({ row }) => (row.getValue("gfcdConsolidado") ? "Sim" : "Não") },
-    { accessorKey: "nomeConsolidador", header: "Consolidado por" }, { accessorKey: "retiro", header: "Retiro" },
+    { accessorKey: "retiro", header: "Encontro" },
     {
       id: "actions",
       header: "Ações",
@@ -148,34 +128,20 @@ export function TabelaPessoas() {
     },
   ], [editarPessoa]);
 
-  React.useEffect(() => {
-    const membrosRef = ref(database, 'membros/');
-    const unsubscribe = onValue(membrosRef, (snapshot) => {
-      const data = snapshot.val();
-      const peopleArray: Pessoa[] = data ? Object.keys(data).map(key => ({
-        id: key,
-        ...data[key]
-      })) : [];
-      setPeople(peopleArray);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   // Type guard para colunas com accessorKey
   function hasAccessorKey(
-    col: ColumnDef<Pessoa>
-  ): col is ColumnDef<Pessoa> & { accessorKey: keyof Pessoa } {
+    col: ColumnDef<User>
+  ): col is ColumnDef<User> & { accessorKey: keyof User } {
     return "accessorKey" in col && typeof col.accessorKey === "string";
   }
 
   React.useEffect(() => {
-    // Inicializa reportColumns apenas com accessorKey que são chaves de Pessoa
+    // Inicializa reportColumns apenas com accessorKey que são chaves de User
     const initialColumns = columns
       .filter(hasAccessorKey)
       .reduce(
         (acc, col) => ({ ...acc, [col.accessorKey]: true }),
-        {} as Record<keyof Pessoa, boolean>
+        {} as Record<keyof User, boolean>
       );
     setReportColumns(initialColumns);
   }, [columns]);
@@ -279,26 +245,12 @@ export function TabelaPessoas() {
         </Table>
       </div>
 
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirmar Exclusão</DialogTitle>
-            <DialogDescription>
-              Você tem certeza que deseja excluir o registro de{" "}
-              <strong>{personToDelete?.nome}</strong>? Essa ação não pode ser
-              desfeita.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="secondary" onClick={() => setIsDeleteDialogOpen(false)}>
-              CANCELAR
-            </Button>
-            <Button variant="destructive" onClick={excluirPessoa}>
-              EXCLUIR
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteUserDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        user={personToDelete}
+      />
 
       <Dialog open={isReportModalOpen} onOpenChange={setIsReportModalOpen}>
         <DialogContent className="sm:max-w-[425px]">
