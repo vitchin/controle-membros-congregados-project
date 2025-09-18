@@ -205,37 +205,7 @@ export function Register() {
       console.error("Erro ao salvar dados:", error);
     }
   };
-
-  const estadosBrasil = [
-    { label: "Acre (AC)", value: "AC" },
-    { label: "Alagoas (AL)", value: "AL" },
-    { label: "Amapá (AP)", value: "AP" },
-    { label: "Amazonas (AM)", value: "AM" },
-    { label: "Bahia (BA)", value: "BA" },
-    { label: "Ceará (CE)", value: "CE" },
-    { label: "Distrito Federal (DF)", value: "DF" },
-    { label: "Espírito Santo (ES)", value: "ES" },
-    { label: "Goiás (GO)", value: "GO" },
-    { label: "Maranhão (MA)", value: "MA" },
-    { label: "Mato Grosso (MT)", value: "MT" },
-    { label: "Mato Grosso do Sul (MS)", value: "MS" },
-    { label: "Minas Gerais (MG)", value: "MG" },
-    { label: "Pará (PA)", value: "PA" },
-    { label: "Paraíba (PB)", value: "PB" },
-    { label: "Paraná (PR)", value: "PR" },
-    { label: "Pernambuco (PE)", value: "PE" },
-    { label: "Piauí (PI)", value: "PI" },
-    { label: "Rio de Janeiro (RJ)", value: "RJ" },
-    { label: "Rio Grande do Norte (RN)", value: "RN" },
-    { label: "Rio Grande do Sul (RS)", value: "RS" },
-    { label: "Rondônia (RO)", value: "RO" },
-    { label: "Roraima (RR)", value: "RR" },
-    { label: "Santa Catarina (SC)", value: "SC" },
-    { label: "São Paulo (SP)", value: "SP" },
-    { label: "Sergipe (SE)", value: "SE" },
-    { label: "Tocantins (TO)", value: "TO" }
-  ];
-
+  
   return (
     <section className="text-[#350700] container w-full h-full mx-auto my-10 px-5 py-8 bg-white border-1 border-solid border-gray-300 rounded-lg shadow-md">
       <h2 className="text-center text-2xl font-bold mb-4">
@@ -274,7 +244,36 @@ export function Register() {
           </div>
           <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" value={formData.bairro} onChange={manipularMudancaInput} />
           <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" value={formData.cidade} onChange={manipularMudancaInput} />
-          <FormSelect id="uf" placeholder="UF" label="UF:" value={formData.uf} onChange={(value) => manipularMudancaSelect('uf', value)} options={estadosBrasil}/>
+          <FormSelect id="uf" placeholder="UF" label="UF:" value={formData.uf} onChange={(value) => manipularMudancaSelect('uf', value)} options={[
+            { label: "Acre (AC)", value: "AC" },
+            { label: "Alagoas (AL)", value: "AL" },
+            { label: "Amapá (AP)", value: "AP" },
+            { label: "Amazonas (AM)", value: "AM" },
+            { label: "Bahia (BA)", value: "BA" },
+            { label: "Ceará (CE)", value: "CE" },
+            { label: "Distrito Federal (DF)", value: "DF" },
+            { label: "Espírito Santo (ES)", value: "ES" },
+            { label: "Goiás (GO)", value: "GO" },
+            { label: "Maranhão (MA)", value: "MA" },
+            { label: "Mato Grosso (MT)", value: "MT" },
+            { label: "Mato Grosso do Sul (MS)", value: "MS" },
+            { label: "Minas Gerais (MG)", value: "MG" },
+            { label: "Pará (PA)", value: "PA" },
+            { label: "Paraíba (PB)", value: "PB" },
+            { label: "Paraná (PR)", value: "PR" },
+            { label: "Pernambuco (PE)", value: "PE" },
+            { label: "Piauí (PI)", value: "PI" },
+            { label: "Rio de Janeiro (RJ)", value: "RJ" },
+            { label: "Rio Grande do Norte (RN)", value: "RN" },
+            { label: "Rio Grande do Sul (RS)", value: "RS" },
+            { label: "Rondônia (RO)", value: "RO" },
+            { label: "Roraima (RR)", value: "RR" },
+            { label: "Santa Catarina (SC)", value: "SC" },
+            { label: "São Paulo (SP)", value: "SP" },
+            { label: "Sergipe (SE)", value: "SE" },
+            { label: "Tocantins (TO)", value: "TO" }
+          ]}
+        />
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">TRABALHO</h4>
         <div className={inputstyle}>
