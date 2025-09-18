@@ -21,7 +21,7 @@ export interface User {
     dtCasamento: string;
     pai: string;
     mae: string;
-    numFilhos: number | "";
+    numFilhos: number | null;
     ministerio: string;
     ministerioFunc: string;
     gfcdLider: boolean;
@@ -44,4 +44,4 @@ export interface User {
   }
 
   // Mock database
-  export const users: User[] = [];
+  export let users: User[] = [];

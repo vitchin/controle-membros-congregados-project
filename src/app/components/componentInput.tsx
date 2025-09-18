@@ -23,7 +23,7 @@ interface FormInputProps {
 export function FormInput({ id, name, label, placeholder, maxLength, type = "text", required = false, disabled = false, value, onChange, onBlur }: FormInputProps) {
   return (
     <div className={divinputstyle}>
-      <Label className="mb-1">{label}{required && obrigatorio}</Label>
+      <Label>{label}{required && obrigatorio}</Label>
       <Input id={id} name={name} placeholder={placeholder} type={type} maxLength={maxLength} required={required} disabled={disabled} value={value} onChange={onChange} onBlur={onBlur} />
     </div>
   )

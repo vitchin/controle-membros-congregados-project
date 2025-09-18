@@ -24,16 +24,3 @@ export async function PUT(
   }
   return NextResponse.json({ error: 'User not found' }, { status: 404 });
 }
-
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const userIndex = users.findIndex(u => u.id === params.id);
-  if (userIndex !== -1) {
-    // This is a hard delete for now, will be changed to soft delete later
-    users.splice(userIndex, 1);
-    return NextResponse.json({ message: 'User deleted successfully' });
-  }
-  return NextResponse.json({ error: 'User not found' }, { status: 404 });
-}
