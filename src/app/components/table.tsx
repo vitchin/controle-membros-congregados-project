@@ -83,7 +83,7 @@ export function TabelaPessoas() {
 
   const columns: ColumnDef<User>[] = React.useMemo(() => [
     { accessorKey: "nome", header: "Nome" }, { accessorKey: "sexo", header: "Sexo" },
-    { accessorKey: "dtNascimento", header: "Nascimento" }, { accessorKey: "estadoCivil", header: "Estado Civil" },
+    { accessorKey: "dtNascimento", header: "Data Nascimento" }, { accessorKey: "estadoCivil", header: "Estado Civil" },
     { accessorKey: "numTel", header: "Telefone" }, { accessorKey: "email", header: "Email" },
     { accessorKey: "cep", header: "CEP" }, { accessorKey: "endereco", header: "Endereço" },
     { accessorKey: "cidade", header: "Cidade" }, { accessorKey: "bairro", header: "Bairro" },
@@ -95,11 +95,13 @@ export function TabelaPessoas() {
     { accessorKey: "mae", header: "Mãe" }, { accessorKey: "numFilhos", header: "N° Filhos" },
     { accessorKey: "ministerio", header: "Ministério" }, { accessorKey: "ministerioFunc", header: "Função" },
     { accessorKey: "gfcdLider",  header: "Líder GFCD?", cell: ({ row }) => (row.getValue("gfcdLider") ? "Sim" : "Não") },
-    { accessorKey: "dtBatismo", header: "Batismo" },
+    { accessorKey: "dtBatismo", header: "Data Batismo" },
     { accessorKey: "batizado", header: "Batizado?", cell: ({ row }) => (row.getValue("batizado") ? "Sim" : "Não") },
-    { accessorKey: "igrejaBatizado", header: "Igreja Batismo" }, { accessorKey: "dtAdmissao", header: "Admissão" },
-    { accessorKey: "tipoAdmissao", header: "Tipo Admissão" }, { accessorKey: "dtConversao", header: "Data Extra" },
-    { accessorKey: "gfcdFrequentado", header: "GFCD" }, { accessorKey: "gfcdConsolidado", header: "Consolidado?", cell: ({ row }) => (row.getValue("gfcdConsolidado") ? "Sim" : "Não") },
+    { accessorKey: "igrejaBatizado", header: "Igreja Batismo" }, { accessorKey: "dtAdmissao", header: "Data Admissão" },
+    { accessorKey: "tipoAdmissao", header: "Tipo Admissão" }, { accessorKey: "dtConversao", header: "Data Conversão" },
+    { accessorKey: "gfcdFrequentado", header: "GFCD Frequentado" }, { accessorKey: "gfcdConsolidado", header: "Consolidado?", cell: ({ row }) => (row.getValue("gfcdConsolidado") ? "Sim" : "Não") },
+    { accessorKey: "formaConsolidacao", header: "Forma Consolidação" },  { accessorKey: "outrosFormaConsolidacao", header: "Outros (Consolidação)" },
+    { accessorKey: "profissao", header: "Profissão" }, { accessorKey: "igrejaAnterior", header: "Igreja Anterior" },
     { accessorKey: "retiro", header: "Encontro" },
     {
       id: "actions",
