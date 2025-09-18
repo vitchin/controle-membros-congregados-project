@@ -21,7 +21,7 @@ export interface User {
     dtCasamento: string;
     pai: string;
     mae: string;
-    numFilhos: number | null;
+    numFilhos: number | "";
     ministerio: string;
     ministerioFunc: string;
     gfcdLider: boolean;
