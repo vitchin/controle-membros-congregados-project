@@ -17,6 +17,14 @@ import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/comp
 import { Dialog,DialogContent,DialogDescription,DialogFooter,DialogHeader,DialogTitle } from "@/components/ui/dialog";
 import { ref, onValue, remove } from "firebase/database";
 
+function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
+  const result = {} as Pick<T, K>;
+  for (const key of keys) {
+    result[key] = obj[key];
+  }
+  return result;
+}
+
 type Pessoa = {
   id: string;
   nome: string;
@@ -24,7 +32,7 @@ type Pessoa = {
   dtNascimento: string;
   estadoCivil: string;
   numTel: string;
-  email:string;
+  email: string;
   cep: string;
   endereco: string;
   cidade: string;
@@ -54,7 +62,6 @@ type Pessoa = {
   gfcdConsolidado: boolean;
   nomeConsolidador: string;
   retiro: string;
-  [key: string]: any;
 };
 
 export function TabelaPessoas() {
@@ -64,7 +71,8 @@ export function TabelaPessoas() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [personToDelete, setPersonToDelete] = React.useState<Pessoa | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = React.useState(false);
-  const [reportColumns, setReportColumns] = React.useState<{[key: string]: boolean}>({});
+  // Ajuste da tipagem de reportColumns
+  const [reportColumns, setReportColumns] = React.useState<Record<keyof Pessoa, boolean>>({} as Record<keyof Pessoa, boolean>);
   const [reportFilename, setReportFilename] = React.useState("relatorio_membros");
 
   const excluirPessoa = React.useCallback(() => {
@@ -80,15 +88,14 @@ export function TabelaPessoas() {
     router.push(`/register/${person.id}`);
   }, [router]);
 
+  // dentro do componente, ajuste a função gerarRelatorio
   const gerarRelatorio = React.useCallback(() => {
-    const selectedColumns = Object.keys(reportColumns).filter(col => reportColumns[col]);
-    const filteredData = people.map(person => {
-      const newPerson: {[key: string]: any} = {};
-      selectedColumns.forEach(column => {
-        newPerson[column] = person[column];
-      });
-      return newPerson;
-    });
+    const selectedColumns = (Object.keys(reportColumns) as Array<keyof Pessoa>)
+      .filter(col => reportColumns[col]);
+
+    const filteredData = people.map(person =>
+      pick(person, selectedColumns)
+    );
 
     exportTableToExcel(filteredData, reportFilename);
     setIsReportModalOpen(false);
@@ -132,8 +139,7 @@ export function TabelaPessoas() {
               onClick={() => {
                 setPersonToDelete(row.original);
                 setIsDeleteDialogOpen(true);
-              }}
-            >
+              }}>
               Excluir
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -156,10 +162,21 @@ export function TabelaPessoas() {
     return () => unsubscribe();
   }, []);
 
+  // Type guard para colunas com accessorKey
+  function hasAccessorKey(
+    col: ColumnDef<Pessoa>
+  ): col is ColumnDef<Pessoa> & { accessorKey: keyof Pessoa } {
+    return "accessorKey" in col && typeof col.accessorKey === "string";
+  }
+
   React.useEffect(() => {
+    // Inicializa reportColumns apenas com accessorKey que são chaves de Pessoa
     const initialColumns = columns
-      .filter(c => c.accessorKey)
-      .reduce((acc, col) => ({ ...acc, [col.accessorKey as string]: true }), {});
+      .filter(hasAccessorKey)
+      .reduce(
+        (acc, col) => ({ ...acc, [col.accessorKey]: true }),
+        {} as Record<keyof Pessoa, boolean>
+      );
     setReportColumns(initialColumns);
   }, [columns]);
 
@@ -293,23 +310,25 @@ export function TabelaPessoas() {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4 max-h-60 overflow-y-auto">
-              {columns.filter(c => c.accessorKey).map((column) => {
-                const accessorKey = column.accessorKey as string;
-                return (
-                  <div key={accessorKey} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={accessorKey}
-                      checked={reportColumns[accessorKey]}
-                      onCheckedChange={(checked) =>
-                        setReportColumns(prev => ({ ...prev, [accessorKey]: !!checked }))
-                      }
-                    />
-                    <Label htmlFor={accessorKey} className="capitalize">
-                      {String(column.header)}
-                    </Label>
-                  </div>
-                );
-              })}
+              {columns
+                .filter(hasAccessorKey)
+                .map((column) => {
+                  const accessorKey = column.accessorKey;
+                  return (
+                    <div key={accessorKey} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={String(accessorKey)}
+                        checked={reportColumns[accessorKey]}
+                        onCheckedChange={(checked) =>
+                          setReportColumns(prev => ({ ...prev, [accessorKey]: !!checked }))
+                        }
+                      />
+                      <Label htmlFor={String(accessorKey)} className="capitalize">
+                        {String(column.header)}
+                      </Label>
+                    </div>
+                  );
+                })}
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="filename" className="text-right">
