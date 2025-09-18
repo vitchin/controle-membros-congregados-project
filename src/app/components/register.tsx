@@ -276,7 +276,7 @@ export function Register() {
           <FormInput id="igrejaBatizado" label="Igreja do Batismo" placeholder="Igreja do Batismo" type="text" value={formData.igrejaBatizado} onChange={manipularMudancaInput} disabled={!formData.batizado} />
           <FormInput id="dtBatismo" label="Data do Batismo" placeholder="" type="date" value={formData.dtBatismo} onChange={manipularMudancaInput} disabled={!formData.batizado}/>
           <FormSelect id="tipoAdmissao" label="Tipo de Admissão:" placeholder="Tipo de Admissão" value={formData.tipoAdmissao} onChange={(value) => manipularMudancaSelect('tipoAdmissao', value)} options={[
-            { label: "Batismo", value: "Batismo" }, { label: "Vindo de outra igreja", value: "Vindo de outra igreja" }, { label: "Carta de transferência", value: "Carta de transferência"}
+            { label: "Batismo", value: "Batismo" }, { label: "Aclamação", value: "Aclamação" }, { label: "Transferência", value: "Transferência"}
           ]} />
           <FormInput id="dtAdmissao" label="Data da Admissão:" placeholder="" type="date" value={formData.dtAdmissao} onChange={manipularMudancaInput}/>
         </div>
