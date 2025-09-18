@@ -44,4 +44,4 @@ export interface User {
   }
 
   // Mock database
-  export let users: User[] = [];
+  export const users: User[] = [];
