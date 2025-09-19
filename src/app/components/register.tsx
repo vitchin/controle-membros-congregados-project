@@ -222,22 +222,22 @@ export function Register() {
           <FormInput id="nome" label="Nome:" placeholder="Nome completo" required value={formData.nome} onChange={manipularMudancaInput} disabled={isEditMode} />
           <FormInput id="apelido" label="Conhecido Por:" placeholder="Conhecido Por..." type="text" value={formData.apelido} onChange={manipularMudancaInput} />
           <FormSelect id="sexo" label="Sexo:" placeholder="Selecione..." required value={formData.sexo} onChange={(value) => manipularMudancaSelect('sexo', value)} options={[
-            { label: "Masculino", value: "Masculino" }, { label: "Feminino", value: "Feminino" }
+            { label: "MASCULINO", value: "masculino" }, { label: "FEMININO", value: "feminino" }
           ]} />
           <FormInput id="dtNascimento" label="Data de Nascimento:" placeholder="" type="date" required value={formData.dtNascimento} onChange={manipularMudancaInput} />
           <FormInput id="natural" label="Naturalidade:" placeholder="Naturalidade" type="text" value={formData.natural} onChange={manipularMudancaInput} />
           <FormInput id="profissao" label="Profissão:" placeholder="Profissão" type="text" value={formData.profissao} onChange={manipularMudancaInput} />
           <FormSelect id="escola" label="Escolaridade:" placeholder="Selecione..." value={formData.escola} onChange={(value) => manipularMudancaSelect('escola', value)} options={[
-            { label: "Nenhum", value: "Nenhum" },
-            { label: "Fundamental", value: "Fundamental" },
-            { label: "Médio", value: "Médio" },
-            { label: "Superior", value: "Superior" }
+            { label: "NENHUM", value: "nenhum" },
+            { label: "FUNDAMENTAL", value: "nundamental" },
+            { label: "MÉDIO", value: "medio" },
+            { label: "SUPERIOR", value: "superior" }
           ]} />
           <FormSelect id="estadoCivil" label="Estado Civil:" placeholder="Selecione..." required value={formData.estadoCivil} onChange={(value) => manipularMudancaSelect('estadoCivil', value)} options={[
-            { label: "Solteiro", value: "Solteiro" }, 
-            { label: "Casado", value: "Casado" }, 
-            { label: "Divorciado", value: "Divorciado"}, 
-            { label: "União Estável", value: "União estável" }
+            { label: "SOLTEIRO", value: "Solteiro" }, 
+            { label: "CASADO", value: "Casado" }, 
+            { label: "DIVORCIADO", value: "Divorciado"}, 
+            { label: "UNIÃO ESTÁVEL", value: "União estável" }
           ]} />
           <FormInput id="numTel" label="Telefone:" placeholder="(xx) xxxxx-xxxx" type="text" required value={formData.numTel} onChange={manipularMudancaInput} />
           <FormInput id="email" label="Email:" placeholder="Email" type="email" required value={formData.email} onChange={manipularMudancaInput} />
@@ -252,33 +252,33 @@ export function Register() {
           <FormInput id="bairro" label="Bairro:" placeholder="Bairro" type="text" value={formData.bairro} onChange={manipularMudancaInput} />
           <FormInput id="cidade" label="Cidade:" placeholder="Cidade" type="text" value={formData.cidade} onChange={manipularMudancaInput} />
           <FormSelect id="uf" placeholder="Selecione..." label="UF:" value={formData.uf} onChange={(value) => manipularMudancaSelect('uf', value)} options={[
-            { label: "Acre (AC)", value: "AC" },
-            { label: "Alagoas (AL)", value: "AL" },
-            { label: "Amapá (AP)", value: "AP" },
-            { label: "Amazonas (AM)", value: "AM" },
-            { label: "Bahia (BA)", value: "BA" },
-            { label: "Ceará (CE)", value: "CE" },
-            { label: "Distrito Federal (DF)", value: "DF" },
-            { label: "Espírito Santo (ES)", value: "ES" },
-            { label: "Goiás (GO)", value: "GO" },
-            { label: "Maranhão (MA)", value: "MA" },
-            { label: "Mato Grosso (MT)", value: "MT" },
-            { label: "Mato Grosso do Sul (MS)", value: "MS" },
-            { label: "Minas Gerais (MG)", value: "MG" },
-            { label: "Pará (PA)", value: "PA" },
-            { label: "Paraíba (PB)", value: "PB" },
-            { label: "Paraná (PR)", value: "PR" },
-            { label: "Pernambuco (PE)", value: "PE" },
-            { label: "Piauí (PI)", value: "PI" },
-            { label: "Rio de Janeiro (RJ)", value: "RJ" },
-            { label: "Rio Grande do Norte (RN)", value: "RN" },
-            { label: "Rio Grande do Sul (RS)", value: "RS" },
-            { label: "Rondônia (RO)", value: "RO" },
-            { label: "Roraima (RR)", value: "RR" },
-            { label: "Santa Catarina (SC)", value: "SC" },
-            { label: "São Paulo (SP)", value: "SP" },
-            { label: "Sergipe (SE)", value: "SE" },
-            { label: "Tocantins (TO)", value: "TO" }
+            { label: "ACRE (AC)", value: "ac" },
+            { label: "ALAGOAS (AL)", value: "al" },
+            { label: "AMAPÁ (AP)", value: "ap" },
+            { label: "AMAZONAS (AM)", value: "am" },
+            { label: "BAHIA (BA)", value: "ba" },
+            { label: "CEARÁ (CE)", value: "ce" },
+            { label: "DISTRITO FEDERAL (DF)", value: "df" },
+            { label: "ESPÍRITO SANTO (ES)", value: "es" },
+            { label: "GOIÁS (GO)", value: "go" },
+            { label: "MARANHÃO (MA)", value: "ma" },
+            { label: "MATO GROSSO (MT)", value: "mt" },
+            { label: "MATO GROSSO DO SUL (MS)", value: "ms" },
+            { label: "MINAS GERAIS (MG)", value: "mg" },
+            { label: "PARÁ (PA)", value: "pa" },
+            { label: "PARAÍBA (PB)", value: "pb" },
+            { label: "PARANÁ (PR)", value: "pr" },
+            { label: "PERNAMBUCO (PE)", value: "pe" },
+            { label: "PIAUÍ (PI)", value: "pi" },
+            { label: "RIO DE JANEIRO (RJ)", value: "rj" },
+            { label: "RIO GRANDE DO NORTE (RN)", value: "rn" },
+            { label: "RIO GRANDE DO SUL (RS)", value: "rs" },
+            { label: "RONDÔNIA (RO)", value: "ro" },
+            { label: "RORAIMA (RR)", value: "rr" },
+            { label: "SANTA CATARINA (SC)", value: "sc" },
+            { label: "SÃO PAULO (SP)", value: "sp" },
+            { label: "SERGIPE (SE)", value: "se" },
+            { label: "TOCANTINS (TO)", value: "to" }
         ]} />
         </div>
         <h4 className="my-8 text-xs text-[#33070198] font-bold select-none">TRABALHO</h4>
@@ -308,9 +308,9 @@ export function Register() {
           <FormInput id="igrejaBatizado" label="Igreja do Batismo" placeholder="Igreja do Batismo" type="text" value={formData.igrejaBatizado} onChange={manipularMudancaInput} disabled={!formData.batizado} />
           <FormInput id="dtBatismo" label="Data do Batismo" placeholder="" type="date" value={formData.dtBatismo} onChange={manipularMudancaInput} disabled={!formData.batizado}/>
           <FormSelect id="tipoAdmissao" label="Tipo de Admissão:" placeholder="Selecione..." value={formData.tipoAdmissao} onChange={(value) => manipularMudancaSelect('tipoAdmissao', value)} options={[
-            { label: "Batismo", value: "Batismo" }, { label: "Aclamação", value: "Aclamação" }, { label: "Transferência", value: "Transferência"}
+            { label: "BATISMO", value: "batismo" }, { label: "ACLAMAÇÃO", value: "aclamacao" }, { label: "TRANSFERÊNCIA", value: "transferencia"}
           ]} />
-          {formData.tipoAdmissao === 'Transferência' && (
+          {formData.tipoAdmissao === 'transferencia' && (
             <FormInput id="igrejaAnterior" label="Igreja Anterior:" placeholder="Igreja Anterior" type="text" value={formData.igrejaAnterior || ''} onChange={manipularMudancaInput} />
           )}
           <FormInput id="dtAdmissao" label="Data da Admissão:" placeholder="" type="date" value={formData.dtAdmissao} onChange={manipularMudancaInput}/>
@@ -319,32 +319,32 @@ export function Register() {
         <h3 className="my-5 font-bold">DADOS MINISTERIAIS</h3>
         <div className={inputstyle}>
           <FormSelect id="gfcdFrequentado" label="GFCD Frequentado:" placeholder="Selecione..." value={formData.gfcdFrequentado} onChange={(value) => manipularMudancaSelect('gfcdFrequentado', value)} options={[
-              { label: "PHILOS", value: "Philos" },{ label: "JAVÉ SHAMMAH", value: "Javé Shammah" },
-              { label: "RENASCER", value: "Renascer" },{ label: "REUEL", value: "Reuel" },
-              { label: "KADOSH", value: "Kadosh" },{ label: "RUAH", value: "Ruah" },
-              { label: "SHEKINAH", value: "Shekinah" },{ label: "TEMPO DE DEUS", value: "Tempo de Deus" },
-              { label: "PENIEL", value: "Peniel" },{ label: "DEUS É FIEL", value: "Deus é Fiel" },
-              { label: "LÍRIO DOS VALES", value: "Lírio dos Vales" },{ label: "KOINONIA", value: "Koinonia" },
-              { label: "JEOVÁ JIREH", value: "Jeová Jireh" },{ label: "HERDEIRAS DO REI", value: "Herdeiras do Rei" },
-              { label: "AMAI", value: "Amai" },{ label: "MULHERES DE EXCELÊNCIA", value: "Mulheres de Excelência" },
-              { label: "LEÃO DA TRIBO DE JUDÁ", value: "Leão da Tribo de Judá" },{ label: "VIDA", value: "Vida" },
-              { label: "SIMPLISMENTE FILHAS", value: "Simplesmente Filhas" },{ label: "PRIMÍCIAS", value: "Primícias" }
+              { label: "NENHUM", value: "nenhum" },{ label: "PHILOS", value: "philos" },{ label: "JAVÉ SHAMMAH", value: "jave shammah" },
+              { label: "RENASCER", value: "renascer" },{ label: "REUEL", value: "reuel" },
+              { label: "KADOSH", value: "kadosh" },{ label: "RUAH", value: "ruah" },
+              { label: "SHEKINAH", value: "shekinah" },{ label: "TEMPO DE DEUS", value: "tempo de deus" },
+              { label: "PENIEL", value: "peniel" },{ label: "DEUS É FIEL", value: "deus e fiel" },
+              { label: "LÍRIO DOS VALES", value: "lirio dos vales" },{ label: "KOINONIA", value: "koinonia" },
+              { label: "JEOVÁ JIREH", value: "jeova jireh" },{ label: "HERDEIRAS DO REI", value: "herdeiras do rei" },
+              { label: "AMAI", value: "amai" },{ label: "MULHERES DE EXCELÊNCIA", value: "mulheres de excelencia" },
+              { label: "LEÃO DA TRIBO DE JUDÁ", value: "leao da tribo de juda" },{ label: "VIDA", value: "vida" },
+              { label: "SIMPLISMENTE FILHAS", value: "simplesmente filhas" },{ label: "PRIMÍCIAS", value: "primicias" }
           ]} />
           <FormCheckbox id="gfcdConsolidado" label="Já foi consolidado?" checked={formData.gfcdConsolidado} onCheckedChange={(checked) => manipularMudancaCheckbox('gfcdConsolidado', checked)}/>
           <FormSelect id="formaConsolidacao" label="Forma de Consolidação:" placeholder="Selecione..." value={formData.formaConsolidacao} onChange={(value) => manipularMudancaSelect('formaConsolidacao', value)} options={[
-              { label: "EBD", value: "EBD" },
-              { label: "GFCD", value: "GFCD" },
-              { label: "Outros", value: "Outros" }
+              { label: "EBD", value: "ebd" },
+              { label: "GFCD", value: "gfcd" },
+              { label: "Outros", value: "outros" }
             ]}
           />
           {formData.formaConsolidacao === 'Outros' && (
             <FormInput id="outrosFormaConsolidacao" label="Informe a Forma:" placeholder="Informe a Forma" type="text" value={formData.outrosFormaConsolidacao || ''} onChange={manipularMudancaInput}/>
           )}
           <FormSelect id="retiro" label="Encontro:" placeholder="Selecione..." value={formData.retiro} onChange={(value) => manipularMudancaSelect('retiro', value)} options={[
-              { label: "Não Realizado", value: "Pendente" },
-              { label: "Pre-encontro", value: "Pre-encontro" },
-              { label: "Encontro", value: "Encontro" },
-              { label: "Pós-encontro", value: "Pós-encontro" }
+              { label: "NENHUM", value: "nenhum" },
+              { label: "PRE-ENCONTRO", value: "pre_encontro" },
+              { label: "ENCONTRO", value: "encontro" },
+              { label: "PÓS-ENCONTRO", value: "pos_encontro" }
           ]} />
         </div>
 
