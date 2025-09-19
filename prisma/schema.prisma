@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Membro {
+  id Int @id @default(autoincrement())
+  nome                    String
+  sexo                    String
+  dtNascimento            DateTime
+  estadoCivil             String
+  numTel                  String
+  email                   String
+  cep                     String
+  endereco                String
+  cidade                  String
+  bairro                  String
+  uf                      String
+  natural                 String
+  apelido                 String
+  escola                  String
+  empresaTel              String
+  empresaLocal            String
+  conjuge                 String
+  conjugeTel              String
+  dtCasamento             DateTime?
+  pai                     String
+  mae                     String
+  numFilhos               Int?
+  ministerio              String
+  ministerioFunc          String
+  gfcdLider               Boolean
+  dtBatismo               DateTime?
+  batizado                Boolean
+  igrejaBatizado          String
+  dtAdmissao              DateTime?
+  tipoAdmissao            String
+  dtConversao             DateTime?
+  gfcdFrequentado         String
+  gfcdConsolidado         Boolean
+  formaConsolidacao       String
+  outrosFormaConsolidacao String?
+  retiro                  String
+  profissao               String
+  igrejaAnterior          String?
+  dataExclusao            DateTime?
+  motivoExclusao          String?
+  outrosMotivoExclusao    String?
+}
