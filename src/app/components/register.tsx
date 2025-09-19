@@ -292,7 +292,7 @@ export function Register() {
         <div className={inputstyle}>
           <FormInput id="pai" label="Nome do Pai:" placeholder="Nome do Pai" type="text" value={formData.pai} onChange={manipularMudancaInput}/>
           <FormInput id="mae" label="Nome da Mãe:" placeholder="Nome da Mãe" type="text" value={formData.mae} onChange={manipularMudancaInput} />
-          <FormInput id="numFilhos" label="Nº de Filhos:" placeholder="Nº de filhos" type="number" value={formData.numFilhos ?? ''} onChange={manipularMudancaInput}/>
+          <FormInput id="numFilhos" label="Nº de Filhos:" placeholder="Nº de filhos" type="number" value={formData.numFilhos !== null && formData.numFilhos !== undefined ? String(formData.numFilhos) : '0'} onChange={manipularMudancaInput}/>
           <FormInput id="conjuge" label="Nome do Cônjuge:" placeholder="Nome do Cônjuge" type="text" value={formData.conjuge} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== "Casado" && formData.estadoCivil !== "União estável"}/>
           <FormInput id="conjugeTel" label="Telefone do Cônjuge:" placeholder="(xx) xxxxx-xxxx" value={formData.conjugeTel} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== "Casado" && formData.estadoCivil !== "União estável"} />
           <FormInput id="dtCasamento" label="Data do Casamento:" placeholder="" type="date" value={formData.dtCasamento} onChange={manipularMudancaInput} disabled={formData.estadoCivil !== "Casado" && formData.estadoCivil !== "União estável"} />
