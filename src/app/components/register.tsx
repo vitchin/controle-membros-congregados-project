@@ -337,7 +337,7 @@ export function Register() {
               { label: "Outros", value: "outros" }
             ]}
           />
-          {formData.formaConsolidacao === 'Outros' && (
+          {formData.formaConsolidacao === 'outros' && (
             <FormInput id="outrosFormaConsolidacao" label="Informe a Forma:" placeholder="Informe a Forma" type="text" value={formData.outrosFormaConsolidacao || ''} onChange={manipularMudancaInput}/>
           )}
           <FormSelect id="retiro" label="Encontro:" placeholder="Selecione..." value={formData.retiro} onChange={(value) => manipularMudancaSelect('retiro', value)} options={[
