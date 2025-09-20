@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { users, User } from '../db';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const user = users.find(u => u.id === params.id);
+  const id = parseInt(params.id, 10);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
+  }
+
+  const user = await prisma.membro.findUnique({
+    where: { id },
+  });
+
   if (user) {
     return NextResponse.json(user);
   }
@@ -16,24 +24,56 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const updatedData: Partial<User> = await req.json();
-  const userIndex = users.findIndex(u => u.id === params.id);
-  if (userIndex !== -1) {
-    users[userIndex] = { ...users[userIndex], ...updatedData };
-    return NextResponse.json(users[userIndex]);
+  const id = parseInt(params.id, 10);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
   }
-  return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
+  try {
+    const body = await req.json();
+
+    const data = {
+      ...body,
+      dtNascimento: body.dtNascimento ? new Date(body.dtNascimento) : undefined,
+      dtCasamento: body.dtCasamento ? new Date(body.dtCasamento) : null,
+      dtBatismo: body.dtBatismo ? new Date(body.dtBatismo) : null,
+      dtAdmissao: body.dtAdmissao ? new Date(body.dtAdmissao) : null,
+      dtConversao: body.dtConversao ? new Date(body.dtConversao) : null,
+      numFilhos: body.numFilhos ? parseInt(body.numFilhos, 10) : null,
+    };
+
+    delete data.id;
+
+    const updatedUser = await prisma.membro.update({
+      where: { id },
+      data,
+    });
+    return NextResponse.json(updatedUser);
+  } catch (error) {
+    console.error("Failed to update user:", error);
+    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+  }
 }
 
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const userIndex = users.findIndex(u => u.id === params.id);
-  if (userIndex !== -1) {
-    // This is a hard delete for now, will be changed to soft delete later
-    users.splice(userIndex, 1);
-    return NextResponse.json({ message: 'User deleted successfully' });
+  const id = parseInt(params.id, 10);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: 'Invalid user ID' }, { status: 400 });
   }
-  return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
+  try {
+    await prisma.membro.update({
+      where: { id },
+      data: {
+        dataExclusao: new Date(),
+      },
+    });
+    return NextResponse.json({ message: 'User soft deleted successfully' });
+  } catch (error) {
+    console.error("Failed to delete user:", error);
+    return NextResponse.json({ error: 'User not found or failed to delete' }, { status: 404 });
+  }
 }
