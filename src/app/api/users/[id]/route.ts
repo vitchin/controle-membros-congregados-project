@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { users, User } from '../db';
 
+type RouteContext = {
+  params: {
+    id: string;
+  };
+};
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
-  const user = users.find(u => u.id === params.id);
+  const { id } = context.params;
+  const user = users.find(u => u.id === id);
   if (user) {
     return NextResponse.json(user);
   }
@@ -14,10 +21,12 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
+  const { id } = context.params;
   const updatedData: Partial<User> = await req.json();
-  const userIndex = users.findIndex(u => u.id === params.id);
+  const userIndex = users.findIndex(u => u.id === id);
+
   if (userIndex !== -1) {
     users[userIndex] = { ...users[userIndex], ...updatedData };
     return NextResponse.json(users[userIndex]);
@@ -27,11 +36,12 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
-  const userIndex = users.findIndex(u => u.id === params.id);
+  const { id } = context.params;
+  const userIndex = users.findIndex(u => u.id === id);
+
   if (userIndex !== -1) {
-    // This is a hard delete for now, will be changed to soft delete later
     users.splice(userIndex, 1);
     return NextResponse.json({ message: 'User deleted successfully' });
   }
