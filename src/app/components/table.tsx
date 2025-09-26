@@ -1,33 +1,54 @@
 "use client";
 
-import { exportTableToExcel } from "@/utils/exportExcel";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { MoreHorizontal } from "lucide-react";
-import Logout from "../../../public/logout.svg";
 import * as React from "react";
-import { ColumnDef,ColumnFiltersState,flexRender,getCoreRowModel,getFilteredRowModel,getPaginationRowModel,useReactTable } from "@tanstack/react-table";
-import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
-import { DeleteUserDialog } from "./deleteUserDialog";
-import { ReportDialog } from "./reportDialog";
-import { User } from "@/app/api/users/db";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
-function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
-  const result = {} as Pick<T, K>;
-  for (const key of keys) {
-    result[key] = obj[key];
-  }
-  return result;
-}
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { MoreHorizontal } from "lucide-react";
+
+// Definição do tipo User localmente, já que a API foi removida
+export type User = {
+  id: string;
+  nome: string;
+  email: string;
+  dtNascimento: string;
+  sexo: string;
+  estadoCivil: string;
+};
+
+// Dados estáticos para a tabela
+const staticData: User[] = [
+  { id: "1", nome: "João da Silva", email: "joao.silva@example.com", dtNascimento: "1990-01-15", sexo: "Masculino", estadoCivil: "Solteiro" },
+  { id: "2", nome: "Maria Oliveira", email: "maria.oliveira@example.com", dtNascimento: "1985-05-20", sexo: "Feminino", estadoCivil: "Casada" },
+  { id: "3", nome: "Carlos Pereira", email: "carlos.pereira@example.com", dtNascimento: "1992-09-10", sexo: "Masculino", estadoCivil: "Solteiro" },
+];
 
 const formatDate = (dateString: string) => {
   if (!dateString) return "";
-  // Corrige o problema de fuso horário
   const date = new Date(dateString);
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, '0');
@@ -38,86 +59,22 @@ const formatDate = (dateString: string) => {
 export function TabelaPessoas() {
   const router = useRouter();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [people, setPeople] = React.useState<User[]>([]);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
-  const [personToDelete, setPersonToDelete] = React.useState<User | null>(null);
-  const [isReportModalOpen, setIsReportModalOpen] = React.useState(false);
-  const [reportColumns, setReportColumns] = React.useState<Record<keyof User, boolean>>({} as Record<keyof User, boolean>);
-  const [reportFilename, setReportFilename] = React.useState("relatorio_membros");
-
-  const fetchUsers = async () => {
-    const response = await fetch('/api/users');
-    const data = await response.json();
-    setPeople(data);
-  };
-
-  React.useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  const handleDeleteConfirm = async (motivo: string, outrosMotivo?: string) => {
-    if (personToDelete) {
-      await fetch(`/api/users/${personToDelete.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          dataExclusao: new Date().toISOString(),
-          motivoExclusao: motivo,
-          outrosMotivoExclusao: outrosMotivo,
-        }),
-      });
-      setIsDeleteDialogOpen(false);
-      setPersonToDelete(null);
-      fetchUsers(); // Refresh table
-    }
-  };
+  const [people] = React.useState<User[]>(staticData); // Usa os dados estáticos
 
   const editarPessoa = React.useCallback((person: User) => {
     router.push(`/register/${person.id}`);
   }, [router]);
 
-  // dentro do componente, ajuste a função gerarRelatorio
-  const gerarRelatorio = React.useCallback(() => {
-    const selectedColumns = (Object.keys(reportColumns) as Array<keyof User>)
-      .filter(col => reportColumns[col]);
-
-    const filteredData = people.map(person =>
-      pick(person, selectedColumns)
-    );
-
-    exportTableToExcel(filteredData, reportFilename);
-    setIsReportModalOpen(false);
-  }, [people, reportColumns, reportFilename]);
-
   const columns: ColumnDef<User>[] = React.useMemo(() => [
-    { accessorKey: "nome", header: "Nome" }, { accessorKey: "sexo", header: "Sexo" },
-    { accessorKey: "dtNascimento", header: "Data Nascimento", cell: ({ row }) => formatDate(row.getValue("dtNascimento")) },
+    { accessorKey: "nome", header: "Nome" },
+    { accessorKey: "sexo", header: "Sexo" },
+    {
+      accessorKey: "dtNascimento",
+      header: "Data Nascimento",
+      cell: ({ row }) => formatDate(row.getValue("dtNascimento")),
+    },
     { accessorKey: "estadoCivil", header: "Estado Civil" },
-    { accessorKey: "numTel", header: "Telefone" }, { accessorKey: "email", header: "Email" },
-    { accessorKey: "cep", header: "CEP" }, { accessorKey: "endereco", header: "Endereço" },
-    { accessorKey: "cidade", header: "Cidade" }, { accessorKey: "bairro", header: "Bairro" },
-    { accessorKey: "uf", header: "UF" }, { accessorKey: "natural", header: "Naturalidade" },
-    { accessorKey: "apelido", header: "Conhecido por" }, { accessorKey: "escola", header: "Escolaridade" },
-    { accessorKey: "empresaTel", header: "Tel. Trabalho" }, { accessorKey: "empresaLocal", header: "Local Trabalho" },
-    { accessorKey: "conjuge", header: "Cônjuge" }, { accessorKey: "conjugeTel", header: "Tel. Cônjuge" },
-    { accessorKey: "dtCasamento", header: "Casamento", cell: ({ row }) => formatDate(row.getValue("dtCasamento")) },
-    { accessorKey: "pai", header: "Pai" },
-    { accessorKey: "mae", header: "Mãe" }, { accessorKey: "numFilhos", header: "N° Filhos" },
-    { accessorKey: "ministerio", header: "Cargo Ministérial" }, { accessorKey: "ministerioFunc", header: "Função no ministério" },
-    { accessorKey: "gfcdLider",  header: "Líder GFCD?", cell: ({ row }) => (row.getValue("gfcdLider") ? "Sim" : "Não") },
-    { accessorKey: "dtBatismo", header: "Data Batismo", cell: ({ row }) => formatDate(row.getValue("dtBatismo")) },
-    { accessorKey: "batizado", header: "Batizado?", cell: ({ row }) => (row.getValue("batizado") ? "Sim" : "Não") },
-    { accessorKey: "igrejaBatizado", header: "Igreja Batismo" },
-    { accessorKey: "dtAdmissao", header: "Data Admissão", cell: ({ row }) => formatDate(row.getValue("dtAdmissao")) },
-    { accessorKey: "tipoAdmissao", header: "Tipo Admissão" },
-    { accessorKey: "dtConversao", header: "Data Conversão", cell: ({ row }) => formatDate(row.getValue("dtConversao")) },
-    { accessorKey: "gfcdFrequentado", header: "GFCD Frequentado" },
-    { accessorKey: "gfcdConsolidado", header: "Consolidado?", cell: ({ row }) => (row.getValue("gfcdConsolidado") ? "Sim" : "Não") },
-    { accessorKey: "formaConsolidacao", header: "Forma Consolidação" },  { accessorKey: "outrosFormaConsolidacao", header: "Outros (Consolidação)" },
-    { accessorKey: "profissao", header: "Profissão" }, { accessorKey: "igrejaAnterior", header: "Igreja Anterior" },
-    { accessorKey: "retiro", header: "Encontro" },
+    { accessorKey: "email", header: "Email" },
     {
       id: "actions",
       header: "Ações",
@@ -132,29 +89,11 @@ export function TabelaPessoas() {
             <DropdownMenuItem onClick={() => editarPessoa(row.original)}>
               Editar
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setPersonToDelete(row.original);
-                setIsDeleteDialogOpen(true);
-              }}>
-              Excluir
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ),
     },
   ], [editarPessoa]);
-
-  React.useEffect(() => {
-    // Inicializa reportColumns apenas com accessorKey que são chaves de User
-    const initialColumns = columns
-      .filter((col): col is ColumnDef<User> & { accessorKey: keyof User } => "accessorKey" in col && typeof col.accessorKey === "string")
-      .reduce(
-        (acc, col) => ({ ...acc, [col.accessorKey]: true }),
-        {} as Record<keyof User, boolean>
-      );
-    setReportColumns(initialColumns);
-  }, [columns]);
 
   const table = useReactTable({
     data: people,
@@ -170,16 +109,6 @@ export function TabelaPessoas() {
 
   return (
     <main className="text-[#350700] container mx-auto my-10 px-5 py-8 bg-white border-1 border-solid border-gray-300 rounded-lg shadow-md">
-      <div className="w-full flex justify-end mb-4">
-        <Button onClick={() => {
-            localStorage.removeItem("isLoggedIn");
-            router.push("/login");
-          }}>
-          Sair
-          <Image src={Logout} alt="Imagem de sair" className="w-5 h-5" />
-        </Button>
-      </div>
-
       <h2 className="text-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-4">
         TABELA MEMBROS/CONGREGADOS
       </h2>
@@ -196,24 +125,16 @@ export function TabelaPessoas() {
           }
           className="w-full max-w-[600px]"
         />
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Button
-            id="btn-add"
-            onClick={() => router.push("/register")}
-            className="w-full sm:w-auto" variant="secondary">
-            ADICIONAR PESSOAS
-          </Button>
-          <Button
-            id="btn-report"
-            onClick={() => setIsReportModalOpen(true)}
-            className="w-full sm:w-auto" variant="default">
-            GERAR RELATÓRIO EXCEL
-          </Button>
-        </div>
+        <Button
+          id="btn-add"
+          onClick={() => router.push("/register")}
+          className="w-full sm:w-auto" variant="secondary">
+          ADICIONAR PESSOAS
+        </Button>
       </div>
 
       <div className="w-full overflow-x-auto rounded-md border">
-        <Table className="min-w-[1200px] text-sm">
+        <Table className="min-w-[800px] text-sm">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -254,24 +175,6 @@ export function TabelaPessoas() {
           </TableBody>
         </Table>
       </div>
-
-      <DeleteUserDialog
-        isOpen={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        onConfirm={handleDeleteConfirm}
-        user={personToDelete}
-      />
-
-      <ReportDialog
-        isOpen={isReportModalOpen}
-        onClose={() => setIsReportModalOpen(false)}
-        columns={columns}
-        reportColumns={reportColumns}
-        setReportColumns={setReportColumns}
-        reportFilename={reportFilename}
-        setReportFilename={setReportFilename}
-        gerarRelatorio={gerarRelatorio}
-      />
     </main>
   );
 }
