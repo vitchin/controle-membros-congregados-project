@@ -13,8 +13,8 @@ import * as React from "react";
 import { ColumnDef,ColumnFiltersState,flexRender,getCoreRowModel,getFilteredRowModel,getPaginationRowModel,useReactTable } from "@tanstack/react-table";
 import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
-import { DeleteUserDialog } from "./deleteUserDialog";
-import { ReportDialog } from "./reportDialog";
+import { DeleteUserDialog } from "./DialogDelete";
+import { ReportDialog } from "./DialogReport";
 import { User } from "@/app/api/users/db";
 
 function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
@@ -55,7 +55,7 @@ export function TabelaPessoas() {
     fetchUsers();
   }, []);
 
-  const handleDeleteConfirm = async (motivo: string, outrosMotivo?: string) => {
+  const Delete = async (motivo: string, outrosMotivo?: string) => {
     if (personToDelete) {
       await fetch(`/api/users/${personToDelete.id}`, {
         method: 'PUT',
@@ -258,7 +258,7 @@ export function TabelaPessoas() {
       <DeleteUserDialog
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
-        onConfirm={handleDeleteConfirm}
+        onConfirm={Delete}
         user={personToDelete}
       />
 
