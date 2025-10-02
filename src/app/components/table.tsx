@@ -15,7 +15,9 @@ import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger }
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
 import { DeleteUserDialog } from "./DialogDelete";
 import { ReportDialog } from "./DialogReport";
-import { User } from "@/app/api/users/db";
+import { db } from "@/lib/firebase";
+import { ref, get } from "firebase/database";
+import type { User } from "@/types/user";
 
 function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
   const result = {} as Pick<T, K>;
@@ -46,9 +48,56 @@ export function TabelaPessoas() {
   const [reportFilename, setReportFilename] = React.useState("relatorio_membros");
 
   const fetchUsers = async () => {
-    const response = await fetch('/api/users');
-    const data = await response.json();
-    setPeople(data);
+    const snapshot = await get(ref(db, "users"));
+    if (snapshot.exists()) {
+      const data = Object.values(snapshot.val() as Record<string, Partial<User>>).map((user) => ({
+        id: user.id ?? "",
+        nome: user.nome ?? "",
+        sexo: user.sexo ?? "",
+        dtNascimento: user.dtNascimento ?? "",
+        estadoCivil: user.estadoCivil ?? "",
+        numTel: user.numTel ?? "",
+        email: user.email ?? "",
+        cep: user.cep ?? "",
+        endereco: user.endereco ?? "",
+        cidade: user.cidade ?? "",
+        bairro: user.bairro ?? "",
+        uf: user.uf ?? "",
+        natural: user.natural ?? "",
+        apelido: user.apelido ?? "",
+        escola: user.escola ?? "",
+        empresaTel: user.empresaTel ?? "",
+        empresaLocal: user.empresaLocal ?? "",
+        conjuge: user.conjuge ?? "",
+        conjugeTel: user.conjugeTel ?? "",
+        dtCasamento: user.dtCasamento ?? "",
+        pai: user.pai ?? "",
+        mae: user.mae ?? "",
+        numFilhos: user.numFilhos ?? null,
+        ministerio: user.ministerio ?? "",
+        ministerioFunc: user.ministerioFunc ?? "",
+        gfcdLider: user.gfcdLider ?? false,
+        dtBatismo: user.dtBatismo ?? "",
+        batizado: user.batizado ?? false,
+        igrejaBatizado: user.igrejaBatizado ?? "",
+        dtAdmissao: user.dtAdmissao ?? "",
+        tipoAdmissao: user.tipoAdmissao ?? "",
+        dtConversao: user.dtConversao ?? "",
+        gfcdFrequentado: user.gfcdFrequentado ?? "",
+        gfcdConsolidado: user.gfcdConsolidado ?? false,
+        formaConsolidacao: user.formaConsolidacao ?? "",
+        outrosFormaConsolidacao: user.outrosFormaConsolidacao,
+        igrejaAnterior: user.igrejaAnterior,
+        retiro: user.retiro ?? "",
+        profissao: user.profissao ?? "",
+        dataExclusao: user.dataExclusao,
+        motivoExclusao: user.motivoExclusao,
+        outrosMotivoExclusao: user.outrosMotivoExclusao,
+      }));
+      setPeople(data.filter((user) => !user.dataExclusao));
+    } else {
+      setPeople([]);
+    }
   };
 
   React.useEffect(() => {

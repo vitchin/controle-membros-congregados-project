@@ -4,7 +4,7 @@ import { Register } from "../../components/register";
 import { Footer } from "../../components/footer";
 
 export const metadata: Metadata = {
-  title: "IEBI Membresia | Registro de usuários",
+  title: "IEBI Membresia | Edição de usuários",
 };
 
 export default function RegisterPage() {
