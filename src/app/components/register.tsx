@@ -78,14 +78,6 @@ export function Register() {
   const [successMessage, setSuccessMessage] = useState("");
 
   // Funções de formatação
-  function formatarParaUpper(value: string): string {
-    return value.replace(/[0-9]/g, '').toUpperCase();
-  }
-  function formatarParaTelefone(value: string): string {
-    const numericValue = value.replace(/\D/g, '').slice(0, 9);
-    if (numericValue.length > 5) return numericValue.replace(/^(\d{5})(\d{4})$/, '$1-$2');
-    return numericValue;
-  }
   function formatarParaInt(value: string): number | null {
     const parsed = parseInt(value, 10);
     return isNaN(parsed) ? null : parsed;
@@ -98,26 +90,14 @@ export function Register() {
   // Funções de manipulação de eventos
   const manipularMudancaInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value, type } = e.target as HTMLInputElement & { id: keyof User };
-    const camposParaUpper: (keyof User)[] = [
-      'nome', 'apelido', 'natural', 'profissao', 'bairro', 'cidade', 'empresaLocal', 
-      'pai', 'mae', 'conjuge', 'ministerio', 'ministerioFunc', 'igrejaBatizado', 
-      'igrejaAnterior', 'outrosFormaConsolidacao'
-    ];
-    const camposParaTelefone: (keyof User)[] = [
-      'numTel', 'empresaTel', 'conjugeTel'
-    ];
     const campoParaCep: keyof User = 'cep';
 
     let finalValue: string | number | null = value;
 
-    if (camposParaUpper.includes(id as keyof User)) 
-      return finalValue = formatarParaUpper(value);
-    else if (camposParaTelefone.includes(id as keyof User)) 
-      return finalValue = formatarParaTelefone(value);
-    else if (type === 'number') 
-      return finalValue = formatarParaInt(value);
+    if (type === 'number') 
+      finalValue = formatarParaInt(value);
     else if (id === campoParaCep) 
-      return finalValue = formatarParaCep(value);
+      finalValue = formatarParaCep(value);
 
     setFormData((prev) => ({
       ...prev,
@@ -133,7 +113,7 @@ export function Register() {
   const pegarCep = async (e: React.FocusEvent<HTMLInputElement>) => {
     const cep = e.target.value.replace(/\D/g, "");
 
-    if (cep === "") return setCepError("");
+    if (cep === "") setCepError("");
     // Faz o request pra API
     if (cep.length === 9) {
       try {
