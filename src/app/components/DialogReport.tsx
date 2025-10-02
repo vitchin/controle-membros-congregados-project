@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ColumnDef } from '@tanstack/react-table';
-import { User } from '@/app/api/users/db';
+import type { User } from '@/types/user';
 
 interface ReportDialogProps {
   isOpen: boolean;

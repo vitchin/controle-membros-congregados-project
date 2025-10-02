@@ -4,9 +4,7 @@ import { exportTableToExcel } from "@/utils/exportExcel";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { MoreHorizontal } from "lucide-react";
 import Logout from "../../../public/logout.svg";
 import * as React from "react";
@@ -48,53 +46,15 @@ export function TabelaPessoas() {
   const [reportFilename, setReportFilename] = React.useState("relatorio_membros");
 
   const fetchUsers = async () => {
-    const snapshot = await get(ref(db, "users"));
+    const usersRef = ref(db, "users");
+    const snapshot = await get(usersRef);
     if (snapshot.exists()) {
-      const data = Object.values(snapshot.val() as Record<string, Partial<User>>).map((user) => ({
-        id: user.id ?? "",
-        nome: user.nome ?? "",
-        sexo: user.sexo ?? "",
-        dtNascimento: user.dtNascimento ?? "",
-        estadoCivil: user.estadoCivil ?? "",
-        numTel: user.numTel ?? "",
-        email: user.email ?? "",
-        cep: user.cep ?? "",
-        endereco: user.endereco ?? "",
-        cidade: user.cidade ?? "",
-        bairro: user.bairro ?? "",
-        uf: user.uf ?? "",
-        natural: user.natural ?? "",
-        apelido: user.apelido ?? "",
-        escola: user.escola ?? "",
-        empresaTel: user.empresaTel ?? "",
-        empresaLocal: user.empresaLocal ?? "",
-        conjuge: user.conjuge ?? "",
-        conjugeTel: user.conjugeTel ?? "",
-        dtCasamento: user.dtCasamento ?? "",
-        pai: user.pai ?? "",
-        mae: user.mae ?? "",
-        numFilhos: user.numFilhos ?? null,
-        ministerio: user.ministerio ?? "",
-        ministerioFunc: user.ministerioFunc ?? "",
-        gfcdLider: user.gfcdLider ?? false,
-        dtBatismo: user.dtBatismo ?? "",
-        batizado: user.batizado ?? false,
-        igrejaBatizado: user.igrejaBatizado ?? "",
-        dtAdmissao: user.dtAdmissao ?? "",
-        tipoAdmissao: user.tipoAdmissao ?? "",
-        dtConversao: user.dtConversao ?? "",
-        gfcdFrequentado: user.gfcdFrequentado ?? "",
-        gfcdConsolidado: user.gfcdConsolidado ?? false,
-        formaConsolidacao: user.formaConsolidacao ?? "",
-        outrosFormaConsolidacao: user.outrosFormaConsolidacao,
-        igrejaAnterior: user.igrejaAnterior,
-        retiro: user.retiro ?? "",
-        profissao: user.profissao ?? "",
-        dataExclusao: user.dataExclusao,
-        motivoExclusao: user.motivoExclusao,
-        outrosMotivoExclusao: user.outrosMotivoExclusao,
+      const usersData = snapshot.val();
+      const usersList = Object.keys(usersData).map(key => ({
+        id: key,
+        ...usersData[key]
       }));
-      setPeople(data.filter((user) => !user.dataExclusao));
+      setPeople(usersList.filter((user) => !user.dataExclusao));
     } else {
       setPeople([]);
     }

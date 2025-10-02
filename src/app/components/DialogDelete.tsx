@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { User } from '@/app/api/users/db';
+import type { User } from "@/types/user";
 
 interface DeleteUserDialogProps {
   isOpen: boolean;

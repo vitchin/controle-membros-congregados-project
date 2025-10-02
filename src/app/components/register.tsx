@@ -172,15 +172,17 @@ export function Register() {
       } else {
         // Criar novo usuário
         const newUserRef = push(ref(db, "users"));
-        await set(newUserRef, { ...formData, id: newUserRef.key });
+        // Adiciona o ID gerado ao objeto do usuário antes de salvar
+        const userData = { ...formData, id: newUserRef.key };
+        await set(newUserRef, userData);
         setSuccessMessage("Registro concluído com sucesso!");
-        setFormData(valoresForm); // Corrija aqui!
-        return;
+        setFormData(valoresForm); // Limpa o formulário
       }
-      domButton.current!.disabled = true;
-      router.push('/table');
+      // Força o redirecionamento via recarregamento da página para garantir a execução no script de teste
+      window.location.href = "/table";
     } catch (error) {
       console.error("Erro ao salvar dados:", error);
+      // Adicionar feedback de erro para o usuário seria uma boa prática
     }
   };
 
