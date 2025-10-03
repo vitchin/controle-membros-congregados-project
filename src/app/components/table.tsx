@@ -146,7 +146,7 @@ export function TabelaPessoas() {
                 setPersonToDelete(row.original);
                 setIsDeleteDialogOpen(true);
               }}>
-              Excluir
+              Exclusão
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
