@@ -127,6 +127,9 @@ export function TabelaPessoas() {
     { accessorKey: "formaConsolidacao", header: "Forma Consolidação" },  { accessorKey: "outrosFormaConsolidacao", header: "Outros (Consolidação)" },
     { accessorKey: "profissao", header: "Profissão" }, { accessorKey: "igrejaAnterior", header: "Igreja Anterior" },
     { accessorKey: "retiro", header: "Encontro" },
+    { accessorKey: "dataExclusao", header: "Data Exclusão", cell: ({ row }) => formatDate(row.getValue("dataExclusao")) },
+    { accessorKey: "motivoExclusao", header: "Motivo Exclusão" },
+    { accessorKey: "outrosMotivoExclusao", header: "Outros Motivos" },
     {
       id: "actions",
       header: "Ações",
